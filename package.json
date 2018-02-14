@@ -1,0 +1,35 @@
+{
+  "name": "@stencil/sass",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "deploy": "npm run build && np --any-branch"
+  },
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "node-sass": "4.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^8.5.1",
+    "@types/node-sass": "^3.10.32",
+    "np": "^2.18.3",
+    "typescript": "^2.7.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ionic-team/stencil-webpack.git"
+  },
+  "author": "Ionic Team",
+  "homepage": "https://stenciljs.com/",
+  "description": "The Stencil Webpack Plugin",
+  "keywords": [
+    "stencil",
+    "sass"
+  ]
+}
