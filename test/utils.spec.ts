@@ -27,13 +27,17 @@ describe('getRenderOptions', () => {
 
   it('should inject global sass array and not change input options or include globals in output opts', () => {
     const input: d.PluginOptions = {
-      injectGlobalPaths: ['/my/global/variables.scss']
+      injectGlobalPaths: [
+        '/my/global/variables.scss',
+        'my/global/mixins.scss'
+      ]
     };
     const output = util.getRenderOptions(input, sourceText, fileName, context);
-    expect(output.data).toBe(`@import "/my/global/variables.scss";body { color: blue; }`);
+    expect(output.data).toBe(`@import "/my/global/variables.scss";@import "my/global/mixins.scss";body { color: blue; }`);
     expect(output.injectGlobalPaths).toBeUndefined();
-    expect(input.injectGlobalPaths).toHaveLength(1);
+    expect(input.injectGlobalPaths).toHaveLength(2);
     expect(input.injectGlobalPaths[0]).toBe('/my/global/variables.scss');
+    expect(input.injectGlobalPaths[1]).toBe('my/global/mixins.scss');
   });
 
   it('should add dirname of filename to existing includePaths array and not change input options', () => {

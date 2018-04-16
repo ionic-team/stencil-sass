@@ -32,11 +32,6 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   if (injectGlobalPaths.length > 0) {
     // automatically inject each of these paths into the source text
     const injectText = injectGlobalPaths.map(injectGlobalPath => {
-      if (!path.isAbsolute(injectGlobalPath)) {
-        // convert any relative paths to absolute paths relative to the project root
-        injectGlobalPath = path.join(context.config.rootDir, injectGlobalPath);
-      }
-
       return `@import "${injectGlobalPath}";`;
     }).join('');
 
