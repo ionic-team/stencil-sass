@@ -12,8 +12,8 @@ export interface PluginTransformResults {
 
 export interface PluginCtx {
   config: {
-    rootDir: string;
-    srcDir: string;
+    rootDir?: string;
+    srcDir?: string;
   };
   fs: any;
   diagnostics: Diagnostic[];
