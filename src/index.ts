@@ -4,11 +4,12 @@ import * as d from './declarations';
 import * as util from './util';
 
 
-export default function sass(opts: d.PluginOptions = {}) {
+export function sass(opts: d.PluginOptions = {}) {
 
   return {
+    name: 'sass',
 
-    transform: function(sourceText: string, fileName: string, context: d.PluginCtx) {
+    transform(sourceText: string, fileName: string, context: d.PluginCtx) {
       if (!context || !util.usePlugin(fileName)) {
         return null;
       }
@@ -44,10 +45,6 @@ export default function sass(opts: d.PluginOptions = {}) {
           }
         });
       });
-    },
-
-    name: 'sass',
-
+    }
   };
-
 }
