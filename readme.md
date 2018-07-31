@@ -10,10 +10,12 @@ npm install @stencil/sass --save-dev
 
 Next, within the project's `stencil.config.js` file, import the plugin and add it to the config's `plugins` config:
 
-```js
-const sass = require('@stencil/sass');
+#### stencil.config.ts
+```ts
+import { Config } from '@stencil/core';
+import { sass } from '@stencil/sass';
 
-exports.config = {
+export const config: Config = {
   plugins: [
     sass()
   ]
