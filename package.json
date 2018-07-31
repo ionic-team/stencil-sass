@@ -14,7 +14,7 @@
     "watch": "tsc --watch",
     "rollup": "rollup -c",
     "version": "npm run build",
-    "deploy": "np",
+    "release": "np",
     "lint": "tslint --project tsconfig.json",
     "test": "jest",
     "test.watch": "jest --watch"
