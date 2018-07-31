@@ -23,10 +23,10 @@
     "node-sass": "4.9.0"
   },
   "devDependencies": {
-    "@types/jest": "^22.1.3",
+    "@types/jest": "^23.3.1",
     "@types/node": "^8.5.1",
     "@types/node-sass": "^3.10.32",
-    "jest": "^22.4.2",
+    "jest": "^23.4.2",
     "np": "^2.18.3",
     "rimraf": "^2.6.2",
     "rollup": "^0.56.2",
@@ -56,6 +56,7 @@
       "js",
       "json",
       "jsx"
-    ]
+    ],
+    "testURL": "http://localhost"
   }
 }
