@@ -8,7 +8,7 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: any, filePath: s
 
   const diagnostic: d.Diagnostic = {
     level: 'error',
-    type: 'sass',
+    type: 'css',
     language: 'scss',
     header: 'sass error',
     code: sassError.status && sassError.status.toString(),
