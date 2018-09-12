@@ -1,6 +1,8 @@
-import { render } from 'node-sass';
-import { loadDiagnostic } from './diagnostics';
+// https://github.com/sass/dart-sass/issues/459
+// @ts-ignore
+import * as Sass from 'sass';
 import * as d from './declarations';
+import { loadDiagnostic } from './diagnostics';
 import * as util from './util';
 
 
@@ -27,7 +29,7 @@ export function sass(opts: d.PluginOptions = {}) {
 
       return new Promise<d.PluginTransformResults>(resolve => {
 
-        render(renderOpts, (err: any, sassResult: any) => {
+        Sass.render(renderOpts, (err: any, sassResult: any) => {
           if (err) {
             loadDiagnostic(context, err, fileName);
             results.code = `/**  sass error${err && err.message ? ': ' + err.message : ''}  **/`;
