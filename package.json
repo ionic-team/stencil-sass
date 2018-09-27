@@ -20,19 +20,19 @@
     "test.watch": "jest --watch"
   },
   "dependencies": {
-    "node-sass": "4.9.0"
+    "node-sass": "4.9.3"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.1",
+    "@types/jest": "^23.3.2",
     "@types/node": "^8.5.1",
     "@types/node-sass": "^3.10.32",
-    "jest": "^23.4.2",
-    "np": "^2.18.3",
+    "jest": "^23.6.0",
+    "np": "^3.0.4",
     "rimraf": "^2.6.2",
-    "rollup": "^0.56.2",
-    "tslint": "^5.9.1",
-    "tslint-ionic-rules": "0.0.14",
-    "typescript": "^2.7.1"
+    "rollup": "^0.66.2",
+    "tslint": "^5.11.0",
+    "tslint-ionic-rules": "0.0.19",
+    "typescript": "3.0.3"
   },
   "repository": {
     "type": "git",
