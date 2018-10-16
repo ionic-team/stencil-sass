@@ -20,7 +20,7 @@
     "test.watch": "jest --watch"
   },
   "dependencies": {
-    "node-sass": "4.9.3"
+    "sass": "1.14.2"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
