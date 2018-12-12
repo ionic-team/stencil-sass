@@ -20,12 +20,12 @@
     "test.watch": "jest --watch"
   },
   "dependencies": {
-    "node-sass": "4.9.3"
+    "node-sass": "4.x"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
     "@types/node": "^8.5.1",
-    "@types/node-sass": "^3.10.32",
+    "@types/node-sass": "4.x",
     "jest": "^23.6.0",
     "np": "^3.0.4",
     "rimraf": "^2.6.2",
