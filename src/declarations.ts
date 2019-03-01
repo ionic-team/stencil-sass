@@ -3,6 +3,7 @@ import { Options } from 'node-sass';
 
 export interface PluginOptions extends Options {
   injectGlobalPaths?: string[];
+  includePaths?: string[];
 }
 
 export interface PluginTransformResults {
