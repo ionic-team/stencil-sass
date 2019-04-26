@@ -82,7 +82,7 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
     renderOpts.data = injectText + renderOpts.data;
   }
 
-  // remove non-standard node-sass option
+  // remove non-standard sass option
   delete renderOpts.injectGlobalPaths;
 
   // the "file" config option is not valid here
