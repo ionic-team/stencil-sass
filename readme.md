@@ -1,6 +1,7 @@
 # @stencil/sass
 
-This package is used to easily precompile Sass files within the Stencil components.
+This package is used to easily precompile Sass files within Stencil components. Internally this plugin uses a pure JavaScript implementation of [Sass](https://www.npmjs.com/package/sass). Please see the
+[Behavioral Differences from Ruby Sass](https://www.npmjs.com/package/sass#behavioral-differences-from-ruby-sass) doc if issues have surfaced since upgrading from previous versions which used used the `node-sass` implementation.
 
 First, npm install within the project:
 
@@ -8,7 +9,7 @@ First, npm install within the project:
 npm install @stencil/sass --save-dev
 ```
 
-Next, within the project's `stencil.config.js` file, import the plugin and add it to the config's `plugins` config:
+Next, within the project's stencil config, import the plugin and add it to the config's `plugins` property:
 
 #### stencil.config.ts
 ```ts
@@ -52,7 +53,7 @@ Note that each of these files are always added to each component, so in most cas
 
 ## Related
 
-* [node-sass](https://www.npmjs.com/package/node-sass)
+* [sass](https://www.npmjs.com/package/sass)
 * [Stencil](https://stenciljs.com/)
 * [Stencil Worldwide Slack](https://stencil-worldwide.slack.com)
 * [Ionic Components](https://www.npmjs.com/package/@ionic/core)
