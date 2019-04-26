@@ -1,12 +1,21 @@
 import pkg from './package.json';
+import pluginSass from './rollup.plugin.sass';
+import rollupResolve from 'rollup-plugin-node-resolve';
 
 
 export default {
   input: 'dist/index.js',
 
+  plugins: [
+    pluginSass(),
+    rollupResolve({
+      preferBuiltins: true
+    })
+  ],
+
   external: [
-    'path',
-    'node-sass'
+    'fs',
+    'path'
   ],
 
   output: [
@@ -15,8 +24,12 @@ export default {
       file: pkg.main
     },
     {
-      format: 'es',
+      format: 'esm',
       file: pkg.module
     }
   ]
 };
+
+(function(exports) {
+
+})({})

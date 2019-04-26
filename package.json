@@ -2,37 +2,37 @@
   "name": "@stencil/sass",
   "version": "0.1.1",
   "license": "MIT",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "prebuild": "rimraf ./dist && npm run test && npm run lint",
-    "build": "tsc && npm run rollup",
+    "prebuild": "rimraf ./dist && npm run lint",
+    "build": "tsc && npm run rollup && npm run test",
     "watch": "tsc --watch",
-    "rollup": "rollup -c",
+    "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
     "release": "np",
     "lint": "tslint --project tsconfig.json",
     "test": "jest",
     "test.watch": "jest --watch"
   },
-  "dependencies": {
-    "sass": "^1.13.4"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^23.3.2",
-    "@types/node": "^8.5.1",
-    "@types/node-sass": "^3.10.32",
-    "jest": "^23.6.0",
+    "@types/jest": "^24.0.11",
+    "@types/node": "^10.0.0",
+    "@types/sass": "^1.16.0",
+    "jest": "^24.7.1",
     "np": "^3.0.4",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.66.2",
-    "tslint": "^5.11.0",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.10.1",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "sass": "^1.19.0",
+    "tslint": "^5.16.0",
     "tslint-ionic-rules": "0.0.19",
-    "typescript": "3.0.3"
+    "typescript": "^3.4.5"
   },
   "repository": {
     "type": "git",

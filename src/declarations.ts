@@ -1,4 +1,4 @@
-import { Options } from 'node-sass';
+import { Options } from 'sass';
 
 
 export interface PluginOptions extends Options {
@@ -8,6 +8,8 @@ export interface PluginOptions extends Options {
 export interface PluginTransformResults {
   code?: string;
   id?: string;
+  originalId?: string;
+  diagnostics?: Diagnostic[];
 }
 
 export interface PluginCtx {

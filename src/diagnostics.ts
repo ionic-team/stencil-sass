@@ -1,9 +1,10 @@
+import { SassException } from 'sass';
 import * as d from './declarations';
 
 
-export function loadDiagnostic(context: d.PluginCtx, sassError: any, filePath: string) {
-  if (!sassError || !context) {
-    return;
+export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, filePath: string) {
+  if (sassError == null || context == null) {
+    return null;
   }
 
   const diagnostic: d.Diagnostic = {
@@ -18,20 +19,28 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: any, filePath: s
     lines: []
   };
 
-  if (filePath) {
+  if (typeof filePath === 'string') {
     diagnostic.absFilePath = filePath;
     diagnostic.relFilePath = formatFileName(context.config.rootDir, diagnostic.absFilePath);
     diagnostic.header = formatHeader('sass', diagnostic.absFilePath, context.config.rootDir, sassError.line);
 
-    if (sassError.line > -1) {
+    const errorLineNumber = sassError.line;
+    const errorLineIndex = errorLineNumber - 1;
+
+    diagnostic.lineNumber = errorLineNumber;
+    diagnostic.columnNumber = sassError.column;
+
+    if (errorLineIndex > -1) {
       try {
-        const sourceText = context.fs.readFileSync(diagnostic.absFilePath);
-        const srcLines = sourceText.split(/(\r?\n)/);
+        let sourceText = context.fs.readFileSync(diagnostic.absFilePath) as string;
+        sourceText = sourceText.replace(/\r/g, '\n');
+
+        const srcLines = sourceText.split(/\n/);
 
         const errorLine: d.PrintLine = {
-          lineIndex: sassError.line - 1,
-          lineNumber: sassError.line,
-          text: srcLines[sassError.line - 1],
+          lineIndex: errorLineIndex,
+          lineNumber: errorLineNumber,
+          text: srcLines[errorLineIndex],
           errorCharStart: sassError.column,
           errorLength: 0
         };
@@ -89,6 +98,8 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: any, filePath: s
   }
 
   context.diagnostics.push(diagnostic);
+
+  return diagnostic;
 }
 
 
