@@ -1,5 +1,5 @@
 import { SassException } from 'sass';
-import * as d from './declarations';
+import * as d from '@stencil/core/internal';
 
 
 export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, filePath: string) {
