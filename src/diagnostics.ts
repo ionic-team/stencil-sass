@@ -12,17 +12,16 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
     type: 'css',
     language: 'scss',
     header: 'sass error',
-    code: sassError.status && sassError.status.toString(),
+    code: formatCode(sassError.status),
     relFilePath: null,
     absFilePath: null,
-    messageText: sassError.message,
+    messageText: formatMessage(sassError.message),
     lines: []
   };
 
   if (typeof filePath === 'string') {
     diagnostic.absFilePath = filePath;
     diagnostic.relFilePath = formatFileName(context.config.rootDir, diagnostic.absFilePath);
-    diagnostic.header = formatHeader('sass', diagnostic.absFilePath, context.config.rootDir, sassError.line);
 
     const errorLineNumber = sassError.line;
     const errorLineIndex = errorLineNumber - 1;
@@ -103,6 +102,24 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
 }
 
 
+function formatCode(input: number) {
+  let output = '';
+  if (input != null) {
+    output = String(input);
+  }
+  return output;
+}
+
+
+function formatMessage(input: string) {
+  let output = '';
+  if (typeof input === 'string') {
+    output = input.split('╷')[0];
+  }
+  return output;
+}
+
+
 function formatFileName(rootDir: string, fileName: string) {
   if (!rootDir || !fileName) return '';
 
@@ -114,21 +131,6 @@ function formatFileName(rootDir: string, fileName: string) {
     fileName = '...' + fileName.substr(fileName.length - 80);
   }
   return fileName;
-}
-
-
-function formatHeader(type: string, fileName: string, rootDir: string, startLineNumber: number = null, endLineNumber: number = null) {
-  let header = `${type}: ${formatFileName(rootDir, fileName)}`;
-
-  if (startLineNumber !== null && startLineNumber > 0) {
-    if (endLineNumber !== null && endLineNumber > startLineNumber) {
-      header += `, lines: ${startLineNumber} - ${endLineNumber}`;
-    } else {
-      header += `, line: ${startLineNumber}`;
-    }
-  }
-
-  return header;
 }
 
 
