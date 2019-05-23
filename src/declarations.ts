@@ -114,8 +114,8 @@ export interface PluginCtx {
 }
 
 export interface Diagnostic {
-  level: 'error' | 'warn' | 'info' | 'log' | 'debug';
-  type: 'typescript' | 'bundling' | 'build' | 'runtime' | 'hydrate' | 'css';
+  level: string;
+  type: string;
   header?: string;
   language?: string;
   messageText: string;
