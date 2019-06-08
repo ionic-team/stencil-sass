@@ -17,7 +17,7 @@
     "outDir": "dist",
     "pretty": true,
     "removeComments": false,
-    "target": "es2015"
+    "target": "es2017"
   },
   "files": [
     "src/index.ts"
