@@ -1,5 +1,4 @@
 import * as d from './declarations';
-import * as fs from 'fs';
 import * as path from 'path';
 
 
@@ -9,42 +8,6 @@ export function usePlugin(fileName: string) {
   }
   return true;
 }
-
-
-export function getContext(context: d.PluginCtx) {
-  context = context || {} as any;
-
-  if (!Array.isArray(context.diagnostics)) {
-    context.diagnostics = [];
-  }
-
-  context.config = context.config || {};
-
-  if (typeof context.config.rootDir !== 'string') {
-    context.config.rootDir = __dirname;
-  }
-
-  if (typeof context.config.srcDir !== 'string') {
-    context.config.srcDir = __dirname;
-  }
-
-  context.fs = context.fs || {};
-
-  if (typeof context.fs.readFileSync !== 'function') {
-    context.fs.readFileSync = (filePath: string) => {
-      return fs.readFileSync(filePath, 'utf8');
-    };
-  }
-
-  if (typeof context.fs.writeFile !== 'function') {
-    context.fs.writeFile = () => {
-      return Promise.resolve();
-    };
-  }
-
-  return context;
-}
-
 
 export function getRenderOptions(opts: d.PluginOptions, sourceText: string, fileName: string, context: d.PluginCtx) {
   // create a copy of the original sass config so we don't change it

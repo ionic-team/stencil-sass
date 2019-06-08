@@ -29,7 +29,3 @@ export default {
     }
   ]
 };
-
-(function(exports) {
-
-})({})

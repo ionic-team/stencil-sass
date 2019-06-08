@@ -1,29 +1,25 @@
 import { render } from 'sass';
 import * as d from './declarations';
 import { loadDiagnostic } from './diagnostics';
-import * as util from './util';
+import { createResultsId, getRenderOptions, usePlugin } from './util';
 
 
-export function sass(opts: d.PluginOptions = {}) {
+export function sass(opts: d.PluginOptions = {}): d.Plugin {
 
   return {
     name: 'sass',
-
-    transform(sourceText: string, fileName: string, context?: d.PluginCtx) {
-      if (!util.usePlugin(fileName)) {
+    pluginType: 'css',
+    transform(sourceText, fileName, context) {
+      if (!usePlugin(fileName)) {
         return null;
       }
       if (typeof sourceText !== 'string') {
         return null;
       }
-
-      context = util.getContext(context);
-
-      const renderOpts = util.getRenderOptions(opts, sourceText, fileName, context);
+      const renderOpts = getRenderOptions(opts, sourceText, fileName, context);
 
       const results: d.PluginTransformResults = {
-        id: util.createResultsId(fileName),
-        originalId: fileName
+        id: createResultsId(fileName),
       };
 
       if (sourceText.trim() === '') {
@@ -35,9 +31,8 @@ export function sass(opts: d.PluginOptions = {}) {
         try {
           render(renderOpts, (err, sassResult) => {
             if (err) {
-              const diagnostic = loadDiagnostic(context, err, fileName);
+              loadDiagnostic(context, err, fileName);
               results.code = `/**  sass error${err && err.message ? ': ' + err.message : ''}  **/`;
-              results.diagnostics = [diagnostic];
               resolve(results);
 
             } else {
@@ -67,7 +62,6 @@ export function sass(opts: d.PluginOptions = {}) {
           context.diagnostics.push(diagnostic);
 
           results.code = `/**  sass error${e && e.message ? ': ' + e.message : ''}  **/`;
-          results.diagnostics = [diagnostic];
           resolve(results);
         }
       });
