@@ -39,7 +39,9 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
         injectGlobalPath = normalizePath(path.join(context.config.rootDir, injectGlobalPath));
       }
 
-      return `@import "${injectGlobalPath}";`;
+      const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
+
+      return `@import "${injectGlobalPath}"${importTerminator}`;
     }).join('');
 
     renderOpts.data = injectText + renderOpts.data;
