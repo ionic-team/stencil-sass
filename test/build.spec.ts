@@ -53,7 +53,7 @@ describe('test build', () => {
     const sourceText = fs.readFileSync(filePath, 'utf8');
     const s = sass();
 
-    const results = await s.transform(sourceText, filePath, context);
+    await s.transform(sourceText, filePath, context);
     expect(context.diagnostics).toHaveLength(1);
     expect(context.diagnostics[0].level).toEqual('error');
     expect(context.diagnostics[0].language).toEqual('scss');

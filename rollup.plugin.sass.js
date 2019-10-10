@@ -1,4 +1,5 @@
 import * as path from 'path';
+import { minify } from 'terser';
 
 export default function() {
   const sassFilePath = path.join(__dirname, 'node_modules', 'sass', 'sass.dart.js');
@@ -60,14 +61,14 @@ const render = Sass.render;
 export { render };
 `;
 
-  if (code.indexOf('!global.window') === -1) {
+  if (code.indexOf('dartNodePreambleSelf.window') === -1) {
     // in jest environments, global.window DOES exist
     // which messes with sass's file path resolving on node
     // remove global.window check to force it to know we're on node
-    throw new Error('cannot find "!global.window" in sass.dart');
+    throw new Error('cannot find "dartNodePreambleSelf.window" in sass.dart');
   }
 
-  code = code.replace('!global.window', 'true /** NODE ENVIRONMENT **/');
-
+  code = code.replace('dartNodePreambleSelf.window', 'false /** NODE ENVIRONMENT **/');
+  code = minify(code, {module: true}).code;
   return code
 }

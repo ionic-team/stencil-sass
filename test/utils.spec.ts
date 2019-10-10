@@ -11,9 +11,9 @@ describe('getRenderOptions', () => {
       rootDir: '/Users/my/app/',
       srcDir: '/Users/my/app/src/',
     },
-    fs: {},
+    fs: {} as any,
     diagnostics: []
-  };
+  } as any;
 
 
   it('should remove "file" config', () => {
