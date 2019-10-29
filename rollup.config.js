@@ -10,7 +10,20 @@ export default {
     pluginSass(),
     rollupResolve({
       preferBuiltins: true
-    })
+    }),
+    {
+      generateBundle(_options, bundle) {
+        // chokidar is required by sass.dart
+        // however this build doesn't use or need chokidar
+        // so we're manually hacking the source to remove it
+        Object.keys(bundle).forEach(fileName => {
+          bundle[fileName].code = bundle[fileName].code.replace(
+            'require("chokidar")',
+            '{}'
+          );
+        });
+      }
+    },
   ],
 
   external: [
