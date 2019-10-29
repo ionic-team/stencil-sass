@@ -61,14 +61,29 @@ const render = Sass.render;
 export { render };
 `;
 
-  if (code.indexOf('dartNodePreambleSelf.window') === -1) {
+  if (!code.includes('dartNodePreambleSelf.window')) {
     // in jest environments, global.window DOES exist
     // which messes with sass's file path resolving on node
     // remove global.window check to force it to know we're on node
     throw new Error('cannot find "dartNodePreambleSelf.window" in sass.dart');
   }
+  code = code.replace(
+    'dartNodePreambleSelf.window',
+    'false /** NODE ENVIRONMENT **/'
+  );
 
-  code = code.replace('dartNodePreambleSelf.window', 'false /** NODE ENVIRONMENT **/');
-  code = minify(code, {module: true}).code;
+  if (!code.includes('require("chokidar")')) {
+    // chokidar is required by sass.dart
+    // however this build doesn't use or need chokidar
+    // so we're manually remove it from the source
+    throw new Error('cannot find "require("chokidar")" in sass.dart');
+  }
+  code = code.replace(
+    'require("chokidar")',
+    '{}'
+  );
+
+  code = minify(code, { module: true }).code;
+
   return code
 }
