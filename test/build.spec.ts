@@ -86,7 +86,6 @@ describe('test build', () => {
     const s = sass();
 
     await s.transform(sourceText, filePath, context);
-    console.log(context.diagnostics[0]);
     expect(context.diagnostics).toHaveLength(1);
     expect(context.diagnostics[0].level).toEqual('error');
     expect(context.diagnostics[0].language).toEqual('scss');

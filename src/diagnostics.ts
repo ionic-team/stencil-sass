@@ -19,8 +19,9 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
     lines: []
   };
 
-  if (typeof filePath === 'string') {
-    diagnostic.absFilePath = filePath;
+  const errorFilePath = sassError.file !== 'stdin' ? sassError.file : filePath;
+  if (typeof errorFilePath === 'string') {
+    diagnostic.absFilePath = errorFilePath;
     diagnostic.relFilePath = formatFileName(context.config.rootDir, diagnostic.absFilePath);
 
     const errorLineNumber = sassError.line;
