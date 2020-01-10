@@ -26,7 +26,7 @@ describe('test build', () => {
       } as any,
       diagnostics: []
     };
-  })
+  });
 
   it('transform', async () => {
     const filePath = path.join(__dirname, 'fixtures', 'test-a.scss');
@@ -78,6 +78,21 @@ describe('test build', () => {
     expect(context.diagnostics[0].lines[2].errorCharStart).toEqual(-1);
     expect(context.diagnostics[0].lines[2].errorLength).toEqual(-1);
     expect(context.diagnostics[0].lines[2].text).toEqual('  div{color:green}');
+  });
+
+  it('transform, import, error', async () => {
+    const filePath = path.join(__dirname, 'fixtures', 'test-d.scss');
+    const sourceText = fs.readFileSync(filePath, 'utf8');
+    const s = sass();
+
+    await s.transform(sourceText, filePath, context);
+    console.log(context.diagnostics[0]);
+    expect(context.diagnostics).toHaveLength(1);
+    expect(context.diagnostics[0].level).toEqual('error');
+    expect(context.diagnostics[0].language).toEqual('scss');
+    expect(context.diagnostics[0].lineNumber).toEqual(2);
+    expect(context.diagnostics[0].columnNumber).toEqual(23);
+    expect(context.diagnostics[0].lines.length).toEqual(3);
   });
 
   it('name', async () => {
