@@ -17,9 +17,9 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
         return null;
       }
       const renderOpts = getRenderOptions(opts, sourceText, fileName, context);
-
       const results: d.PluginTransformResults = {
         id: createResultsId(fileName),
+        dependencies: []
       };
 
       if (sourceText.trim() === '') {
@@ -36,6 +36,7 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
               resolve(results);
 
             } else {
+              results.dependencies = Array.from(sassResult.stats.includedFiles);
               results.code = sassResult.css.toString();
 
               // write this css content to memory only so it can be referenced

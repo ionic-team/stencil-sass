@@ -35,6 +35,7 @@ describe('test build', () => {
 
     const results = await s.transform(sourceText, filePath, context) as any;
     expect(results.code).toContain('color: red');
+    expect(results.dependencies).toEqual([]);
     expect(results.diagnostics).toEqual(undefined);
   });
 
@@ -45,6 +46,9 @@ describe('test build', () => {
 
     const results = await s.transform(sourceText, filePath, context) as any;
     expect(results.code).toContain('color: red');
+    expect(results.dependencies).toEqual([
+      path.join(__dirname, 'fixtures', 'variables.scss')
+    ]);
     expect(results.diagnostics).toEqual(undefined);
   });
 
