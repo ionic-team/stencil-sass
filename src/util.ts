@@ -1,5 +1,6 @@
 import * as d from './declarations';
 import * as path from 'path';
+import { Importer } from 'sass';
 
 
 export function usePlugin(fileName: string) {
@@ -53,9 +54,52 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   // the "file" config option is not valid here
   delete renderOpts.file;
 
+  if (context.sys && typeof context.sys.resolveModuleId === 'function') {
+    const importers: Importer[] = []
+    if (typeof renderOpts.importer === 'function') {
+      importers.push(renderOpts.importer);
+    } else if (Array.isArray(renderOpts.importer)) {
+      importers.push(...renderOpts.importer);
+    }
+
+    const importer: Importer = (url, _prev, done) => {
+      if (typeof url === 'string') {
+        if (url.startsWith('~')) {
+          try {
+            const orgUrl = context.sys.normalizePath(url).substr(1);
+            const parts = orgUrl.split('/');
+            const moduleId = parts.shift();
+            const filePath = parts.join('/')
+            if (moduleId) {
+              context.sys.resolveModuleId({
+                moduleId,
+                containingFile: fileName
+              }).then(resolved => {
+                const resolvePath = context.sys.normalizePath(path.join(resolved.resolveId, filePath));
+                done({
+                  file: resolvePath
+                });
+              }).catch(err => {
+                console.error(`@stencil/sass, resolveModuleId "${url}", ${err}`);
+                done(null);
+              });
+
+              return;
+            }
+          } catch (e) {
+            console.error(`@stencil/sass, importer "${url}", ${e}`);
+          }
+        }
+      }
+      done(null);
+    };
+    importers.push(importer);
+
+    renderOpts.importer = importers;
+  }
+
   return renderOpts;
 }
-
 
 export function createResultsId(fileName: string) {
   // create what the new path is post transform (.css)
