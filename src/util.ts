@@ -61,7 +61,7 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   // the "file" config option is not valid here
   delete renderOpts.file;
 
-  if (context.sys && typeof (context.sys as any).resolveModuleId === 'function') {
+  if (context.sys && typeof context.sys.resolveModuleId === 'function') {
     const importers: Importer[] = []
     if (typeof renderOpts.importer === 'function') {
       importers.push(renderOpts.importer);
@@ -79,10 +79,10 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
             const filePath = parts.join('/');
 
             if (moduleId) {
-              (context.sys as any).resolveModuleId({
+              context.sys.resolveModuleId({
                 moduleId,
                 containingFile: fileName
-              }).then((resolved: any) => {
+              }).then((resolved) => {
                 if (resolved.pkgDirPath) {
                   const resolvedPath = path.join(resolved.pkgDirPath, filePath);
                   done({
@@ -92,7 +92,7 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
                   done(null);
                 }
 
-              }).catch((err: any) => {
+              }).catch(err => {
                 done(err);
               });
 

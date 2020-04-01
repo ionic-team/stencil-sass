@@ -35,15 +35,13 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
 
     if (errorLineIndex > -1) {
       try {
-        let sourceText = context.fs.readFileSync(diagnostic.absFilePath) as string;
-        sourceText = sourceText.replace(/\r/g, '\n');
-
-        const srcLines = sourceText.split(/\n/);
+        const sourceText = context.fs.readFileSync(diagnostic.absFilePath) as string;
+        const srcLines = sourceText.split(/\r?\n/);
 
         const errorLine: d.PrintLine = {
           lineIndex: errorLineIndex,
           lineNumber: errorLineNumber,
-          text: srcLines[errorLineIndex],
+          text: typeof srcLines[errorLineIndex] === 'string' ? srcLines[errorLineIndex] : '',
           errorCharStart: sassError.column,
           errorLength: 0
         };
