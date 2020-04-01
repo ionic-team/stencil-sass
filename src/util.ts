@@ -37,7 +37,14 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
     const injectText = injectGlobalPaths.map(injectGlobalPath => {
       if (!path.isAbsolute(injectGlobalPath)) {
         // convert any relative paths to absolute paths relative to the project root
-        injectGlobalPath = normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+
+        if (context.sys && typeof context.sys.normalizePath === 'function') {
+          // context.sys.normalizePath added in stencil 1.11.0
+          injectGlobalPath = context.sys.normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+        } else {
+          // TODO, eventually remove normalizePath() from @stencil/sass
+          injectGlobalPath = normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+        }
       }
 
       const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
@@ -66,28 +73,33 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
       if (typeof url === 'string') {
         if (url.startsWith('~')) {
           try {
-            const orgUrl = context.sys.normalizePath(url).substr(1);
+            const orgUrl = url.substr(1);
             const parts = orgUrl.split('/');
             const moduleId = parts.shift();
-            const filePath = parts.join('/')
+            const filePath = parts.join('/');
+
             if (moduleId) {
               context.sys.resolveModuleId({
                 moduleId,
                 containingFile: fileName
               }).then(resolved => {
-                const resolvePath = context.sys.normalizePath(path.join(resolved.resolveId, filePath));
-                done({
-                  file: resolvePath
-                });
+                if (resolved.pkgDirPath) {
+                  const resolvedPath = path.join(resolved.pkgDirPath, filePath);
+                  done({
+                    file: context.sys.normalizePath(resolvedPath)
+                  });
+                } else {
+                  done(null);
+                }
+
               }).catch(err => {
-                console.error(`@stencil/sass, resolveModuleId "${url}", ${err}`);
-                done(null);
+                done(err);
               });
 
               return;
             }
           } catch (e) {
-            console.error(`@stencil/sass, importer "${url}", ${e}`);
+            done(e);
           }
         }
       }

@@ -9,17 +9,15 @@
     "dist/"
   ],
   "scripts": {
-    "prebuild": "rimraf ./dist && npm run lint",
+    "prebuild": "rimraf ./dist",
     "build": "tsc && npm run rollup && npm run test",
     "watch": "tsc --watch",
     "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
     "release": "np",
-    "lint": "tslint --project tsconfig.json",
     "test": "jest",
     "test.watch": "jest --watch"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@stencil/core": "^1.0.2"
   },
@@ -36,8 +34,6 @@
     "sass": "1.26.3",
     "terser": "^4.6.10",
     "ts-jest": "^24.3.0",
-    "tslint": "6.1.0",
-    "tslint-ionic-rules": "0.0.21",
     "typescript": "3.8.3"
   },
   "repository": {
