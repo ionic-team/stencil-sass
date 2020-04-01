@@ -9,35 +9,31 @@
     "dist/"
   ],
   "scripts": {
-    "prebuild": "rimraf ./dist && npm run lint",
+    "prebuild": "rimraf ./dist",
     "build": "tsc && npm run rollup && npm run test",
     "watch": "tsc --watch",
     "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
     "release": "np",
-    "lint": "tslint --project tsconfig.json",
     "test": "jest",
     "test.watch": "jest --watch"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@stencil/core": "^1.0.2"
   },
   "devDependencies": {
-    "@stencil/core": "1.11.3",
+    "@stencil/core": "^1.12.0-0",
     "@types/jest": "24.9.1",
-    "@types/node": "12.7.12",
+    "@types/node": "13.9.8",
     "@types/sass": "1.16.0",
     "jest": "24.9.0",
-    "np": "5.1.1",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.26.0",
+    "np": "6.2.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^1.32.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "sass": "1.26.3",
-    "terser": "^4.3.8",
-    "ts-jest": "^24.1.0",
-    "tslint": "5.20.0",
-    "tslint-ionic-rules": "0.0.21",
+    "terser": "^4.6.10",
+    "ts-jest": "^24.3.0",
     "typescript": "3.8.3"
   },
   "repository": {

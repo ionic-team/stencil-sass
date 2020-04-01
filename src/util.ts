@@ -1,5 +1,6 @@
 import * as d from './declarations';
 import * as path from 'path';
+import { Importer } from 'sass';
 
 
 export function usePlugin(fileName: string) {
@@ -36,7 +37,14 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
     const injectText = injectGlobalPaths.map(injectGlobalPath => {
       if (!path.isAbsolute(injectGlobalPath)) {
         // convert any relative paths to absolute paths relative to the project root
-        injectGlobalPath = normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+
+        if (context.sys && typeof context.sys.normalizePath === 'function') {
+          // context.sys.normalizePath added in stencil 1.11.0
+          injectGlobalPath = context.sys.normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+        } else {
+          // TODO, eventually remove normalizePath() from @stencil/sass
+          injectGlobalPath = normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+        }
       }
 
       const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
@@ -52,6 +60,55 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
 
   // the "file" config option is not valid here
   delete renderOpts.file;
+
+  if (context.sys && typeof context.sys.resolveModuleId === 'function') {
+    const importers: Importer[] = []
+    if (typeof renderOpts.importer === 'function') {
+      importers.push(renderOpts.importer);
+    } else if (Array.isArray(renderOpts.importer)) {
+      importers.push(...renderOpts.importer);
+    }
+
+    const importer: Importer = (url, _prev, done) => {
+      if (typeof url === 'string') {
+        if (url.startsWith('~')) {
+          try {
+            const orgUrl = url.substr(1);
+            const parts = orgUrl.split('/');
+            const moduleId = parts.shift();
+            const filePath = parts.join('/');
+
+            if (moduleId) {
+              context.sys.resolveModuleId({
+                moduleId,
+                containingFile: fileName
+              }).then(resolved => {
+                if (resolved.pkgDirPath) {
+                  const resolvedPath = path.join(resolved.pkgDirPath, filePath);
+                  done({
+                    file: context.sys.normalizePath(resolvedPath)
+                  });
+                } else {
+                  done(null);
+                }
+
+              }).catch(err => {
+                done(err);
+              });
+
+              return;
+            }
+          } catch (e) {
+            done(e);
+          }
+        }
+      }
+      done(null);
+    };
+    importers.push(importer);
+
+    renderOpts.importer = importers;
+  }
 
   return renderOpts;
 }
