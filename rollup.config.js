@@ -1,6 +1,6 @@
 import pkg from './package.json';
 import pluginSass from './rollup.plugin.sass';
-import rollupResolve from 'rollup-plugin-node-resolve';
+import rollupResolve from '@rollup/plugin-node-resolve';
 
 
 export default {
