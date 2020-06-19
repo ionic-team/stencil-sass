@@ -72,18 +72,24 @@ export { render };
     'false /** NODE ENVIRONMENT **/'
   );
 
-  if (!code.includes('require("chokidar")')) {
-    // chokidar is required by sass.dart
-    // however this build doesn't use or need chokidar
-    // so we're manually remove it from the source
-    throw new Error('cannot find "require("chokidar")" in sass.dart');
-  }
-  code = code.replace(
-    'require("chokidar")',
-    '{}'
-  );
+  code = removeNodeRequire(code, 'chokidar');
+  code = removeNodeRequire(code, 'readline');
 
   code = minify(code, { module: true }).code;
 
   return code
+}
+
+function removeNodeRequire(code, moduleId) {
+  const requireStr = `require("${moduleId}")`;
+  if (!code.includes(requireStr)) {
+    // node modules are required by sass.dart
+    // however this build doesn't use or need them
+    // so we'll manually remove it from the source
+    throw new Error(`cannot find "${requireStr}" in sass.dart`);
+  }
+  return code.replace(
+    requireStr,
+    '{}'
+  );
 }
