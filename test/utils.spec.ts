@@ -104,3 +104,43 @@ describe('createResultsId', () => {
   });
 
 });
+
+describe('getModuleId', () => {
+
+  it('getModuleId non-scoped ~ package', () => {
+    const m = util.getModuleId('~ionicons/dist/css/ionicons.css');
+    expect(m.moduleId).toBe('ionicons');
+    expect(m.filePath).toBe('dist/css/ionicons.css');
+  });
+
+  it('getModuleId non-scoped package', () => {
+    const m = util.getModuleId('ionicons/dist/css/ionicons.css');
+    expect(m.moduleId).toBe('ionicons');
+    expect(m.filePath).toBe('dist/css/ionicons.css');
+  });
+
+  it('getModuleId non-scoped package, no path', () => {
+    const m = util.getModuleId('ionicons');
+    expect(m.moduleId).toBe('ionicons');
+    expect(m.filePath).toBe('');
+  });
+
+  it('getModuleId scoped ~ package', () => {
+    const m = util.getModuleId('~@ionic/core/dist/ionic/css/ionic.css');
+    expect(m.moduleId).toBe('@ionic/core');
+    expect(m.filePath).toBe('dist/ionic/css/ionic.css');
+  });
+
+  it('getModuleId scoped package', () => {
+    const m = util.getModuleId('@ionic/core/dist/ionic/css/ionic.css');
+    expect(m.moduleId).toBe('@ionic/core');
+    expect(m.filePath).toBe('dist/ionic/css/ionic.css');
+  });
+
+  it('getModuleId scoped package, no path', () => {
+    const m = util.getModuleId('@ionic/core');
+    expect(m.moduleId).toBe('@ionic/core');
+    expect(m.filePath).toBe('');
+  });
+
+});

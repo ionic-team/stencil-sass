@@ -73,18 +73,15 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
       if (typeof url === 'string') {
         if (url.startsWith('~')) {
           try {
-            const orgUrl = url.substr(1);
-            const parts = orgUrl.split('/');
-            const moduleId = parts.shift();
-            const filePath = parts.join('/');
+            const m = getModuleId(url);
 
-            if (moduleId) {
+            if (m.moduleId) {
               context.sys.resolveModuleId({
-                moduleId,
-                containingFile: fileName
+                moduleId: m.moduleId,
+                containingFile: m.filePath
               }).then((resolved) => {
                 if (resolved.pkgDirPath) {
-                  const resolvedPath = path.join(resolved.pkgDirPath, filePath);
+                  const resolvedPath = path.join(resolved.pkgDirPath, m.filePath);
                   done({
                     file: context.sys.normalizePath(resolvedPath)
                   });
@@ -152,6 +149,27 @@ export function normalizePath(str: string) {
 
   return str;
 }
+
+export function getModuleId(orgImport: string) {
+  if (orgImport.startsWith('~')) {
+    orgImport = orgImport.substring(1);
+  }
+  const splt = orgImport.split('/');
+  const m = {
+    moduleId: null as string,
+    filePath: null as string,
+  };
+
+  if (orgImport.startsWith('@') && splt.length > 1) {
+    m.moduleId = splt.slice(0, 2).join('/');
+    m.filePath = splt.slice(2).join('/');
+  } else {
+    m.moduleId = splt[0];
+    m.filePath = splt.slice(1).join('/');
+  }
+
+  return m;
+};
 
 const EXTENDED_PATH_REGEX = /^\\\\\?\\/;
 const NON_ASCII_REGEX = /[^\x00-\x80]+/;
