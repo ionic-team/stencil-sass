@@ -34,22 +34,25 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
 
   if (injectGlobalPaths.length > 0) {
     // automatically inject each of these paths into the source text
-    const injectText = injectGlobalPaths.map(injectGlobalPath => {
-      if (!path.isAbsolute(injectGlobalPath)) {
+    const injectText = injectGlobalPaths.map((injectGlobalPath) => {
+      const includesNamespace = Array.isArray(injectGlobalPath);
+      let importPath = includesNamespace ? injectGlobalPath[0] as string : injectGlobalPath as string;
+
+      if (!path.isAbsolute(importPath)) {
         // convert any relative paths to absolute paths relative to the project root
 
         if (context.sys && typeof context.sys.normalizePath === 'function') {
           // context.sys.normalizePath added in stencil 1.11.0
-          injectGlobalPath = context.sys.normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+          importPath = context.sys.normalizePath(path.join(context.config.rootDir, importPath));
         } else {
           // TODO, eventually remove normalizePath() from @stencil/sass
-          injectGlobalPath = normalizePath(path.join(context.config.rootDir, injectGlobalPath));
+          importPath = normalizePath(path.join(context.config.rootDir, importPath));
         }
       }
 
       const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
 
-      return `@import "${injectGlobalPath}"${importTerminator}`;
+      return `@use "${importPath}"${includesNamespace ? ` as ${injectGlobalPath[1]}` : ''}${importTerminator}`;
     }).join('');
 
     renderOpts.data = injectText + renderOpts.data;
