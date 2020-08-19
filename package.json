@@ -14,7 +14,7 @@
     "watch": "tsc --watch",
     "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
-    "release": "np",
+    "release": "np --no-2fa",
     "test": "jest",
     "test.watch": "jest --watch"
   },
