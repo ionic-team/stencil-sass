@@ -50,9 +50,9 @@ exports.config = {
 
 Note that each of these files are always added to each component, so in most cases they shouldn't contain CSS because it'll get duplicated in each component. Instead, `injectGlobalPaths` should only be used for Sass variables, mixins and functions, but does not contain any CSS.
 
-To add a custom namespace to the file, the injectGlobalPaths accepts an array of TS Tuples(arrays) with the filepath in the first position, followed by the namespace.
+To add a custom namespace to the file, `injectGlobalPaths` accepts an array of TS Tuples (arrays) with the filepath in the first position, followed by the namespace.
 
-Here is an example of customizing the namespaces:
+Here is an example of customizing the namespace:
 
 ```js
 exports.config = {
