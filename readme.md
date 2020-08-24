@@ -33,15 +33,15 @@ Sass options can be passed to the plugin within the stencil config, which are us
 
 ### Inject Globals Sass Paths
 
-The `injectGlobalPaths` config is an array of paths that automatically get added as `@import` declarations to all components. This can be useful to inject Sass variables, mixins and functions to override defaults of external collections. For example, apps can override default Sass variables of [Ionic components](https://www.npmjs.com/package/@ionic/core). Relative paths within `injectGlobalPaths` should be relative to the stencil config file.
+The `injectGlobalPaths` config is an array of paths that automatically get added as `@use` declarations to all components. This can be useful to inject Sass variables, mixins and functions to override defaults of external collections. For example, apps can override default Sass variables of [Ionic components](https://www.npmjs.com/package/@ionic/core). Relative paths within `injectGlobalPaths` should be relative to the stencil config file.
 
 ```js
 exports.config = {
   plugins: [
     sass({
       injectGlobalPaths: [
-        'src/globals/variables.scss',
-        'src/globals/mixins.scss'
+        'src/global/variables.scss', //automatically adds namespace 'variables'. 
+        'src/global/mixins.scss' //automatically adds namespace 'mixins'
       ]
     })
   ]
@@ -50,6 +50,24 @@ exports.config = {
 
 Note that each of these files are always added to each component, so in most cases they shouldn't contain CSS because it'll get duplicated in each component. Instead, `injectGlobalPaths` should only be used for Sass variables, mixins and functions, but does not contain any CSS.
 
+To add a custom namespace to the file, the injectGlobalPaths accepts an array of TS Tuples(arrays) with the filepath in the first position, followed by the namespace.
+
+Here is an example of customizing the namespaces:
+
+```js
+exports.config = {
+  plugins: [
+    sass({
+      injectGlobalPaths: [
+        ['src/global/variables.scss', 'var'], //can now access variables like this: var.$some-variable
+        ['src/global/mixins.scss', '*'], //global namespace, no prefix needed
+        'src/global/animations.scss' //namespace defaults to 'animations'
+      ]
+    })
+  ]
+};
+```
+It is also valid to use a combination of both of these methods.  If you don't wish to change the namespace from the default file name, it can be left as a string.
 
 ## Related
 
