@@ -37,7 +37,7 @@ The `injectGlobalPaths` config is an array of paths that automatically get added
 
 #### v1 
 
-v1.x of stencil/sass uses sass `@import` syntax to add files listed in the `injectGlobalPaths` option to each stylesheet.  Do not mix this by using @use syntax in your component styles because it is not permitted by sass to have @import statements before @use statements.  Below is an example of using `injectGlobalPaths` in v1.
+v1.x of stencil/sass uses sass `@import` syntax to add files listed in the `injectGlobalPaths` option to each stylesheet.  Do not use `@use` in your components if using v1 because it is not permitted by sass to have `@import` statements before `@use` statements.  Below is an example of using `injectGlobalPaths` in v1.
 
 ```js
 exports.config = {
