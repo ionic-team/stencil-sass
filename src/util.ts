@@ -17,6 +17,9 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   // always set "data" from the source text
   renderOpts.data = sourceText;
 
+  // activate indented syntax if the file extension is .sass
+  renderOpts.indentedSyntax = /(\.sass)$/i.test(fileName);
+
   renderOpts.includePaths = Array.isArray(opts.includePaths) ? opts.includePaths.slice() : [];
 
   // add the directory of the source file to includePaths
