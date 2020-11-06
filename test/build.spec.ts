@@ -117,27 +117,27 @@ describe('test build', () => {
     expect(context.diagnostics).toHaveLength(1);
     expect(context.diagnostics[0].level).toEqual('error');
     expect(context.diagnostics[0].language).toEqual('sass');
-    expect(context.diagnostics[0].lineNumber).toEqual(2);
-    expect(context.diagnostics[0].columnNumber).toEqual(23);
+    expect(context.diagnostics[0].lineNumber).toEqual(3);
+    expect(context.diagnostics[0].columnNumber).toEqual(20);
     expect(context.diagnostics[0].lines.length).toEqual(3);
 
-    expect(context.diagnostics[0].lines[0].lineIndex).toEqual(0);
-    expect(context.diagnostics[0].lines[0].lineNumber).toEqual(1);
+    expect(context.diagnostics[0].lines[0].lineIndex).toEqual(1);
+    expect(context.diagnostics[0].lines[0].lineNumber).toEqual(2);
     expect(context.diagnostics[0].lines[0].errorCharStart).toEqual(-1);
     expect(context.diagnostics[0].lines[0].errorLength).toEqual(-1);
-    expect(context.diagnostics[0].lines[0].text).toEqual('body{color:blue}');
+    expect(context.diagnostics[0].lines[0].text).toEqual('  color: blue');
 
-    expect(context.diagnostics[0].lines[1].lineIndex).toEqual(1);
-    expect(context.diagnostics[0].lines[1].lineNumber).toEqual(2);
-    expect(context.diagnostics[0].lines[1].errorCharStart).toEqual(22);
+    expect(context.diagnostics[0].lines[1].lineIndex).toEqual(2);
+    expect(context.diagnostics[0].lines[1].lineNumber).toEqual(3);
+    expect(context.diagnostics[0].lines[1].errorCharStart).toEqual(19);
     expect(context.diagnostics[0].lines[1].errorLength).toEqual(1);
-    expect(context.diagnostics[0].lines[1].text).toEqual('   hello i am an error!');
+    expect(context.diagnostics[0].lines[1].text).toEqual('hello i am an error!');
 
-    expect(context.diagnostics[0].lines[2].lineIndex).toEqual(2);
-    expect(context.diagnostics[0].lines[2].lineNumber).toEqual(3);
+    expect(context.diagnostics[0].lines[2].lineIndex).toEqual(3);
+    expect(context.diagnostics[0].lines[2].lineNumber).toEqual(4);
     expect(context.diagnostics[0].lines[2].errorCharStart).toEqual(-1);
     expect(context.diagnostics[0].lines[2].errorLength).toEqual(-1);
-    expect(context.diagnostics[0].lines[2].text).toEqual('  div{color:green}');
+    expect(context.diagnostics[0].lines[2].text).toEqual('div');
   });
 
   it('name', async () => {
