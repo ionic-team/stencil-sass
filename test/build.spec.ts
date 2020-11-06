@@ -84,6 +84,62 @@ describe('test build', () => {
     expect(context.diagnostics[0].lines[2].text).toEqual('  div{color:green}');
   });
 
+  it('transform sass', async () => {
+    const filePath = path.join(__dirname, 'fixtures', 'sass', 'test-a.sass');
+    const sourceText = fs.readFileSync(filePath, 'utf8');
+    const s = sass();
+
+    const results = await s.transform(sourceText, filePath, context) as any;
+    expect(results.code).toContain('color: red');
+    expect(results.dependencies).toEqual([]);
+    expect(results.diagnostics).toEqual(undefined);
+  });
+
+  it('transform, import sass', async () => {
+    const filePath = path.join(__dirname, 'fixtures', 'sass', 'test-b.sass');
+    const sourceText = fs.readFileSync(filePath, 'utf8');
+    const s = sass();
+
+    const results = await s.transform(sourceText, filePath, context) as any;
+    expect(results.code).toContain('color: red');
+    expect(results.dependencies).toEqual([
+      path.join(__dirname, 'fixtures', 'sass', 'variables.sass')
+    ]);
+    expect(results.diagnostics).toEqual(undefined);
+  });
+
+  it('transform, error sass', async () => {
+    const filePath = path.join(__dirname, 'fixtures', 'sass', 'test-c.sass');
+    const sourceText = fs.readFileSync(filePath, 'utf8');
+    const s = sass();
+
+    await s.transform(sourceText, filePath, context);
+    expect(context.diagnostics).toHaveLength(1);
+    expect(context.diagnostics[0].level).toEqual('error');
+    expect(context.diagnostics[0].language).toEqual('sass');
+    expect(context.diagnostics[0].lineNumber).toEqual(2);
+    expect(context.diagnostics[0].columnNumber).toEqual(23);
+    expect(context.diagnostics[0].lines.length).toEqual(3);
+
+    expect(context.diagnostics[0].lines[0].lineIndex).toEqual(0);
+    expect(context.diagnostics[0].lines[0].lineNumber).toEqual(1);
+    expect(context.diagnostics[0].lines[0].errorCharStart).toEqual(-1);
+    expect(context.diagnostics[0].lines[0].errorLength).toEqual(-1);
+    expect(context.diagnostics[0].lines[0].text).toEqual('body{color:blue}');
+
+    expect(context.diagnostics[0].lines[1].lineIndex).toEqual(1);
+    expect(context.diagnostics[0].lines[1].lineNumber).toEqual(2);
+    expect(context.diagnostics[0].lines[1].errorCharStart).toEqual(22);
+    expect(context.diagnostics[0].lines[1].errorLength).toEqual(1);
+    expect(context.diagnostics[0].lines[1].text).toEqual('   hello i am an error!');
+
+    expect(context.diagnostics[0].lines[2].lineIndex).toEqual(2);
+    expect(context.diagnostics[0].lines[2].lineNumber).toEqual(3);
+    expect(context.diagnostics[0].lines[2].errorCharStart).toEqual(-1);
+    expect(context.diagnostics[0].lines[2].errorLength).toEqual(-1);
+    expect(context.diagnostics[0].lines[2].text).toEqual('  div{color:green}');
+  });
+
   it('name', async () => {
     const s = sass();
     expect(s.name).toBe('sass');
