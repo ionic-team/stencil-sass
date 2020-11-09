@@ -1,5 +1,5 @@
 {
-  "name": "@gleesik/sass",
+  "name": "@gleesik/stencil-sass",
   "version": "1.4.0-0",
   "license": "MIT",
   "main": "dist/index.js",
@@ -8,6 +8,9 @@
   "files": [
     "dist/"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "prebuild": "rimraf ./dist",
     "build": "tsc && npm run rollup && npm run test",
@@ -38,9 +41,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ionic-team/stencil-sass.git"
+    "url": "git+https://github.com/gleesik/stencil-sass.git"
   },
-  "author": "Ionic Team",
+  "author": "Daniel Costrasel",
   "homepage": "https://stenciljs.com/",
   "description": "The Stencil Sass Plugin",
   "keywords": [
