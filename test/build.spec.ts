@@ -29,7 +29,7 @@ describe('test build', () => {
   })
 
   it('transform', async () => {
-    const filePath = path.join(__dirname, 'fixtures', 'test-a.scss');
+    const filePath = path.join(__dirname, 'fixtures', 'scss', 'test-a.scss');
     const sourceText = fs.readFileSync(filePath, 'utf8');
     const s = sass();
 
@@ -40,20 +40,20 @@ describe('test build', () => {
   });
 
   it('transform, import', async () => {
-    const filePath = path.join(__dirname, 'fixtures', 'test-b.scss');
+    const filePath = path.join(__dirname, 'fixtures', 'scss', 'test-b.scss');
     const sourceText = fs.readFileSync(filePath, 'utf8');
     const s = sass();
 
     const results = await s.transform(sourceText, filePath, context) as any;
     expect(results.code).toContain('color: red');
     expect(results.dependencies).toEqual([
-      path.join(__dirname, 'fixtures', 'variables.scss')
+      path.join(__dirname, 'fixtures', 'scss', 'variables.scss')
     ]);
     expect(results.diagnostics).toEqual(undefined);
   });
 
   it('transform, error', async () => {
-    const filePath = path.join(__dirname, 'fixtures', 'test-c.scss');
+    const filePath = path.join(__dirname, 'fixtures', 'scss', 'test-c.scss');
     const sourceText = fs.readFileSync(filePath, 'utf8');
     const s = sass();
 
