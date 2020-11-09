@@ -24,6 +24,7 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
   }
 
   if (typeof filePath === 'string') {
+    diagnostic.language = /(\.scss)$/i.test(filePath) ? 'scss' : 'sass';
     diagnostic.absFilePath = filePath;
     diagnostic.relFilePath = formatFileName(context.config.rootDir, diagnostic.absFilePath);
 
