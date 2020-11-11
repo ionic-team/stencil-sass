@@ -22,19 +22,19 @@
     "@stencil/core": ">=1.0.2"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^8.0.1",
+    "@rollup/plugin-node-resolve": "^10.0.0",
     "@stencil/core": "^1.14.0",
-    "@types/jest": "24.9.1",
-    "@types/node": "13.9.8",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.7",
     "@types/sass": "1.16.0",
-    "jest": "24.9.0",
+    "jest": "^26.6.3",
     "np": "6.2.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.17.1",
+    "rollup": "^2.33.1",
     "sass": "1.26.8",
-    "terser": "^4.8.0",
-    "ts-jest": "^24.3.0",
-    "typescript": "3.9.5"
+    "terser": "^5.3.8",
+    "ts-jest": "^26.4.4",
+    "typescript": "4.0.5"
   },
   "repository": {
     "type": "git",

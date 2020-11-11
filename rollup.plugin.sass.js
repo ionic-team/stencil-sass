@@ -9,11 +9,11 @@ export default function() {
         return sassFilePath;
       }
     },
-    transform(code, id) {
+    async transform(code, id) {
       // a little nudge to make it easier for
       // rollup to find the cjs exports
       if (id === sassFilePath) {
-        return wrapSassImport(code);
+        return await wrapSassImport(code);
       }
       return code;
     },
@@ -22,7 +22,7 @@ export default function() {
 };
 
 
-function wrapSassImport(code) {
+async function wrapSassImport(code) {
   code = `
 
 const Sass = {};
@@ -75,7 +75,8 @@ export { render };
   code = removeNodeRequire(code, 'chokidar');
   code = removeNodeRequire(code, 'readline');
 
-  code = minify(code, { module: true }).code;
+  const minified = await minify(code, { module: true });
+  code = minified.code;
 
   return code
 }
