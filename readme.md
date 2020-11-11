@@ -33,15 +33,37 @@ Sass options can be passed to the plugin within the stencil config, which are us
 
 ### Inject Globals Sass Paths
 
-The `injectGlobalPaths` config is an array of paths that automatically get added as `@import` declarations to all components. This can be useful to inject Sass variables, mixins and functions to override defaults of external collections. For example, apps can override default Sass variables of [Ionic components](https://www.npmjs.com/package/@ionic/core). Relative paths within `injectGlobalPaths` should be relative to the stencil config file.
+The `injectGlobalPaths` config is an array of paths that automatically get added as imports to all components. This can be useful to inject Sass variables, mixins and functions to override defaults of external collections. For example, apps can override default Sass variables of [Ionic components](https://www.npmjs.com/package/@ionic/core). Relative paths within `injectGlobalPaths` should be relative to the stencil config file.
+
+#### v1 
+
+v1.x of stencil/sass uses sass `@import` syntax to add files listed in the `injectGlobalPaths` option to each stylesheet.  Do not use `@use` in your components if using v1 because it is not permitted by sass to have `@import` statements before `@use` statements.  Below is an example of using `injectGlobalPaths` in v1.
 
 ```js
 exports.config = {
   plugins: [
     sass({
       injectGlobalPaths: [
-        'src/globals/variables.scss',
-        'src/globals/mixins.scss'
+        'src/global/variables.scss', //adds @import 'src/global/variables.scss' statement
+        'src/global/mixins.scss' //adds @import 'src/global/mixins.scss' statement
+      ]
+    })
+  ]
+};
+```
+
+#### v2
+
+v2.x of stencil/sass uses sass `@use` syntax to add files listed in `injectGlobalPaths` to each stylesheet.  Because the `@use` syntax also supports namespacing by default, the option is now available to customize the namespace. `injectGlobalPaths` can now be an array of TS tuples.  The first position is the filepath and the second position is the namespace.  There is still the option to only use a string, which will default the namespace to the name of the file. These methods can be combined.
+
+```js
+exports.config = {
+  plugins: [
+    sass({
+      injectGlobalPaths: [
+        ['src/global/variables.scss', 'var'], //adds "@use 'src/global/variables.scss' as var" statement
+        ['src/global/mixins.scss', '*'], //root namespace, no prefix needed to access
+        'src/global/animations.scss' //namespace defaults to 'animations'
       ]
     })
   ]
