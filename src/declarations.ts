@@ -1,6 +1,12 @@
 
 export * from '@stencil/core/internal';
 
+export interface InjectGlobalPathOption extends Object {
+  import: string;
+  using?: 'use' | 'import' 
+  as?: string;
+}
+
 export interface PluginOptions {
   /**
    * Path to a file to compile.
@@ -36,7 +42,7 @@ export interface PluginOptions {
    * Used for Sass variables, mixins and functions files that do not contain any CSS.
    * This config is custom to `@stencil/sass`.
    */
-  injectGlobalPaths?: ([string, string] | string)[];
+  injectGlobalPaths?: ([string, string] | string | InjectGlobalPathOption)[];
 
   /**
    * Enable Sass Indented Syntax for parsing the data string or file.

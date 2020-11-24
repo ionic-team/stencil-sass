@@ -10,6 +10,29 @@ export function usePlugin(fileName: string) {
   return true;
 }
 
+export function normalizeGlobalInjectionPath(globalInjectionPath: (string | [string, string] | d.InjectGlobalPathOption)): d.InjectGlobalPathOption {
+  if (typeof globalInjectionPath === 'string') {
+    return {
+      import: globalInjectionPath,
+      using: 'import',
+    };
+  } 
+  if (Array.isArray(globalInjectionPath)) {
+    return {
+      import: globalInjectionPath[0],
+      using: 'use',
+      as: globalInjectionPath[1],
+    };
+  }
+  if (typeof globalInjectionPath === 'object') {
+    return globalInjectionPath;
+  }
+};
+
+export function normalizeGlobalPathInjectionConfig(globalInjectionPaths: d.PluginOptions['injectGlobalPaths']): d.InjectGlobalPathOption[] {
+  return globalInjectionPaths.map(normalizeGlobalInjectionPath)
+};
+
 export function getRenderOptions(opts: d.PluginOptions, sourceText: string, fileName: string, context: d.PluginCtx) {
   // create a copy of the original sass config so we don't change it
   const renderOpts = Object.assign({}, opts);
@@ -37,27 +60,26 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
 
   if (injectGlobalPaths.length > 0) {
     // automatically inject each of these paths into the source text
-    const injectText = injectGlobalPaths.map((injectGlobalPath) => {
-      const includesNamespace = Array.isArray(injectGlobalPath);
-      let importPath = includesNamespace ? injectGlobalPath[0] as string : injectGlobalPath as string;
+    const injectText = normalizeGlobalPathInjectionConfig(injectGlobalPaths)
+      .map((normalizedGlobalPathInjection) => {
+        let importPath = normalizedGlobalPathInjection.import;
 
-      if (!path.isAbsolute(importPath)) {
-        // convert any relative paths to absolute paths relative to the project root
+        if (!path.isAbsolute(importPath)) {
+          // convert any relative paths to absolute paths relative to the project root
 
-        if (context.sys && typeof context.sys.normalizePath === 'function') {
-          // context.sys.normalizePath added in stencil 1.11.0
-          importPath = context.sys.normalizePath(path.join(context.config.rootDir, importPath));
-        } else {
-          // TODO, eventually remove normalizePath() from @stencil/sass
-          importPath = normalizePath(path.join(context.config.rootDir, importPath));
+          if (context.sys && typeof context.sys.normalizePath === 'function') {
+            // context.sys.normalizePath added in stencil 1.11.0
+            importPath = context.sys.normalizePath(path.join(context.config.rootDir, importPath));
+          } else {
+            // TODO, eventually remove normalizePath() from @stencil/sass
+            importPath = normalizePath(path.join(context.config.rootDir, importPath));
+          }
         }
-      }
 
-      const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
+        const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
 
-      return `@use "${importPath}"${includesNamespace ? ` as ${injectGlobalPath[1]}` : ''}${importTerminator}`;
-    }).join('');
-
+        return `@${normalizedGlobalPathInjection.using} "${importPath}"${!!normalizedGlobalPathInjection.as ? ` as ${normalizedGlobalPathInjection.as}` : ''}${importTerminator}`;
+      }).join('');
     renderOpts.data = injectText + renderOpts.data;
   }
 
