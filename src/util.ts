@@ -24,9 +24,10 @@ export function normalizeGlobalInjectionPath(globalInjectionPath: (string | [st
       as: globalInjectionPath[1],
     };
   }
-  if (typeof globalInjectionPath === 'object') {
-    return globalInjectionPath;
-  }
+  return {
+    ...globalInjectionPath,
+    using: globalInjectionPath.using || globalInjectionPath.as ? 'use' : 'import',
+  };
 };
 
 export function normalizeGlobalPathInjectionConfig(globalInjectionPaths: d.PluginOptions['injectGlobalPaths']): d.InjectGlobalPathOption[] {

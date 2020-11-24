@@ -1,3 +1,4 @@
+import { InjectGlobalPathOption } from './../src/declarations';
 import * as d from '../src/declarations';
 import * as util from '../src/util';
 
@@ -30,7 +31,7 @@ describe('getRenderOptions', () => {
       injectGlobalPaths: ['/my/global/variables.scss']
     };
     const output = util.getRenderOptions(input, sourceText, fileName, context);
-    expect(output.data).toBe(`@use "/my/global/variables.scss";body { color: blue; }`);
+    expect(output.data).toBe(`@import "/my/global/variables.scss";body { color: blue; }`);
     expect(output.injectGlobalPaths).toBeUndefined();
     expect(input.injectGlobalPaths).toHaveLength(1);
     expect(input.injectGlobalPaths[0]).toBe('/my/global/variables.scss');
@@ -44,8 +45,31 @@ describe('getRenderOptions', () => {
     expect(output.data).toBe(`@use "/my/global/variables.scss" as var;body { color: blue; }`);
     expect(output.injectGlobalPaths).toBeUndefined();
     expect(input.injectGlobalPaths).toHaveLength(1);
-    expect(input.injectGlobalPaths[0][0]).toBe('/my/global/variables.scss');
-    expect(input.injectGlobalPaths[0][1]).toBe('var');
+    expect((input.injectGlobalPaths[0] as [string, string])[0]).toBe('/my/global/variables.scss');
+    expect((input.injectGlobalPaths[0] as [string, string])[1]).toBe('var');
+  });
+
+  it('should inject global sass array, not change input options or include globals in output opts, and add namespace from config object', () => {
+    const input: d.PluginOptions = {
+      injectGlobalPaths: [
+        {
+          import: '/my/global/functions.scss',
+          as: 'func'
+        },
+        {
+          import: '/my/global/variables.scss',
+          using: 'use'
+        }
+      ]
+    };
+    const output = util.getRenderOptions(input, sourceText, fileName, context);
+    expect(output.data).toBe(`@use "/my/global/functions.scss" as func;@use "/my/global/variables.scss";body { color: blue; }`);
+    expect(output.injectGlobalPaths).toBeUndefined();
+    expect(input.injectGlobalPaths).toHaveLength(2);
+    expect((input.injectGlobalPaths[0] as InjectGlobalPathOption).import).toBe('/my/global/functions.scss');
+    expect((input.injectGlobalPaths[0] as InjectGlobalPathOption).as).toBe('func');
+    expect((input.injectGlobalPaths[1] as InjectGlobalPathOption).import).toBe('/my/global/variables.scss');
+    expect((input.injectGlobalPaths[1] as InjectGlobalPathOption).using).toBe('use');
   });
 
   it('should inject global sass array, not change input options or include globals in output opts, and discern when to add namespace', () => {
@@ -56,11 +80,11 @@ describe('getRenderOptions', () => {
       ]
     };
     const output = util.getRenderOptions(input, sourceText, fileName, context);
-    expect(output.data).toBe(`@use "/my/global/variables.scss" as var;@use "/my/global/mixins.scss";body { color: blue; }`);
+    expect(output.data).toBe(`@use "/my/global/variables.scss" as var;@import "/my/global/mixins.scss";body { color: blue; }`);
     expect(output.injectGlobalPaths).toBeUndefined();
     expect(input.injectGlobalPaths).toHaveLength(2);
-    expect(input.injectGlobalPaths[0][0]).toBe('/my/global/variables.scss');
-    expect(input.injectGlobalPaths[0][1]).toBe('var');
+    expect((input.injectGlobalPaths[0] as [string, string])[0]).toBe('/my/global/variables.scss');
+    expect((input.injectGlobalPaths[0] as [string, string])[1]).toBe('var');
     expect(input.injectGlobalPaths[1]).toBe('/my/global/mixins.scss');
   });
 
