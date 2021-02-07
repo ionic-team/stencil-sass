@@ -8,6 +8,7 @@ describe('getRenderOptions', () => {
   const fileName = '/some/path/file-name.scss';
   const context: d.PluginCtx = {
     config: {
+      configPath: '/Users/my/app/stencil.config.ts',
       rootDir: '/Users/my/app/',
       srcDir: '/Users/my/app/src/',
     },
