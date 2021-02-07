@@ -36,20 +36,23 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   const injectGlobalPaths = Array.isArray(opts.injectGlobalPaths) ? opts.injectGlobalPaths.slice() : [];
 
   if (injectGlobalPaths.length > 0) {
+    const baseInjectPath = context.config.configPath? path.dirname(context.config.configPath) : context.config.rootDir;
+
     // automatically inject each of these paths into the source text
     const injectText = injectGlobalPaths.map((injectGlobalPath) => {
       const includesNamespace = Array.isArray(injectGlobalPath);
       let importPath = includesNamespace ? injectGlobalPath[0] as string : injectGlobalPath as string;
 
       if (!path.isAbsolute(importPath)) {
-        // convert any relative paths to absolute paths relative to the project root
+        const injectedPath = path.join(baseInjectPath, importPath);
 
+        // convert any relative paths to absolute paths relative to the project root
         if (context.sys && typeof context.sys.normalizePath === 'function') {
           // context.sys.normalizePath added in stencil 1.11.0
-          importPath = context.sys.normalizePath(path.join(context.config.rootDir, importPath));
+          importPath = context.sys.normalizePath(injectedPath);
         } else {
           // TODO, eventually remove normalizePath() from @stencil/sass
-          importPath = normalizePath(path.join(context.config.rootDir, importPath));
+          importPath = normalizePath(injectedPath);
         }
       }
 
@@ -175,7 +178,7 @@ export function getModuleId(orgImport: string) {
   }
 
   return m;
-};
+}
 
 const EXTENDED_PATH_REGEX = /^\\\\\?\\/;
 const NON_ASCII_REGEX = /[^\x00-\x80]+/;
