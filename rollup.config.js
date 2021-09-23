@@ -15,7 +15,8 @@ export default {
 
   external: [
     'fs',
-    'path'
+    'path',
+    'sass'
   ],
 
   output: [
