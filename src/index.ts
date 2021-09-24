@@ -3,9 +3,7 @@ import * as d from './declarations';
 import { loadDiagnostic } from './diagnostics';
 import { createResultsId, getRenderOptions, usePlugin } from './util';
 
-
 export function sass(opts: d.PluginOptions = {}): d.Plugin {
-
   return {
     name: 'sass',
     pluginType: 'css',
@@ -19,7 +17,7 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
       const renderOpts = getRenderOptions(opts, sourceText, fileName, context);
       const results: d.PluginTransformResults = {
         id: createResultsId(fileName),
-        dependencies: []
+        dependencies: [],
       };
 
       if (sourceText.trim() === '') {
@@ -27,14 +25,13 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
         return Promise.resolve(results);
       }
 
-      return new Promise<d.PluginTransformResults>(resolve => {
+      return new Promise<d.PluginTransformResults>((resolve) => {
         try {
           render(renderOpts, (err, sassResult) => {
             if (err) {
               loadDiagnostic(context, err, fileName);
               results.code = `/**  sass error${err && err.message ? ': ' + err.message : ''}  **/`;
               resolve(results);
-
             } else {
               results.dependencies = Array.from(sassResult.stats.includedFiles);
               results.code = sassResult.css.toString();
@@ -47,7 +44,6 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
               });
             }
           });
-
         } catch (e) {
           // who knows, just good to play it safe here
           const diagnostic: d.Diagnostic = {
@@ -58,7 +54,7 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
             relFilePath: null,
             absFilePath: null,
             messageText: e,
-            lines: []
+            lines: [],
           };
           context.diagnostics.push(diagnostic);
 
@@ -66,6 +62,6 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
           resolve(results);
         }
       });
-    }
+    },
   };
 }

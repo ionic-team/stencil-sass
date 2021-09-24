@@ -1,7 +1,6 @@
 import { SassException } from 'sass';
 import * as d from './declarations';
 
-
 export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, filePath: string) {
   if (sassError == null || context == null) {
     return null;
@@ -16,7 +15,7 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
     relFilePath: null,
     absFilePath: null,
     messageText: formatMessage(sassError.message),
-    lines: []
+    lines: [],
   };
 
   if (typeof sassError.file === 'string' && sassError.file !== 'stdin') {
@@ -44,7 +43,7 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
           lineNumber: errorLineNumber,
           text: typeof srcLines[errorLineIndex] === 'string' ? srcLines[errorLineIndex] : '',
           errorCharStart: sassError.column,
-          errorLength: 0
+          errorLength: 0,
         };
 
         for (let i = errorLine.errorCharStart; i >= 0; i--) {
@@ -74,7 +73,7 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
             lineNumber: errorLine.lineNumber - 1,
             text: srcLines[errorLine.lineIndex - 1],
             errorCharStart: -1,
-            errorLength: -1
+            errorLength: -1,
           };
 
           diagnostic.lines.unshift(previousLine);
@@ -86,24 +85,21 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
             lineNumber: errorLine.lineNumber + 1,
             text: srcLines[errorLine.lineIndex + 1],
             errorCharStart: -1,
-            errorLength: -1
+            errorLength: -1,
           };
 
           diagnostic.lines.push(nextLine);
         }
-
       } catch (e) {
         console.error(`StyleSassPlugin loadDiagnostic, ${e}`);
       }
     }
-
   }
 
   context.diagnostics.push(diagnostic);
 
   return diagnostic;
 }
-
 
 function formatCode(input: number) {
   let output = '';
@@ -113,7 +109,6 @@ function formatCode(input: number) {
   return output;
 }
 
-
 function formatMessage(input: string) {
   let output = '';
   if (typeof input === 'string') {
@@ -121,7 +116,6 @@ function formatMessage(input: string) {
   }
   return output;
 }
-
 
 function formatFileName(rootDir: string, fileName: string) {
   if (!rootDir || !fileName) return '';
@@ -136,5 +130,29 @@ function formatFileName(rootDir: string, fileName: string) {
   return fileName;
 }
 
-
-const STOP_CHARS = ['', '\n', '\r', '\t', ' ', ':', ';', ',', '{', '}', '.', '#', '@', '!', '[', ']', '(', ')', '&', '+', '~', '^', '*', '$'];
+const STOP_CHARS = [
+  '',
+  '\n',
+  '\r',
+  '\t',
+  ' ',
+  ':',
+  ';',
+  ',',
+  '{',
+  '}',
+  '.',
+  '#',
+  '@',
+  '!',
+  '[',
+  ']',
+  '(',
+  ')',
+  '&',
+  '+',
+  '~',
+  '^',
+  '*',
+  '$',
+];
