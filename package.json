@@ -25,6 +25,7 @@
     "@stencil/core": ">=2.0.0"
   },
   "devDependencies": {
+    "@ionic/prettier-config": "^2.0.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
     "@stencil/core": "^2.8.1",
     "@types/jest": "^26.0.15",
@@ -54,5 +55,6 @@
   "jest": {
     "preset": "ts-jest",
     "testURL": "http://localhost"
-  }
+  },
+  "prettier": "@ionic/prettier-config"
 }

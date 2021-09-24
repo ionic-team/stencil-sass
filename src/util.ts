@@ -2,7 +2,6 @@ import * as d from './declarations';
 import * as path from 'path';
 import { Importer } from 'sass';
 
-
 export function usePlugin(fileName: string) {
   if (typeof fileName === 'string') {
     return /(\.scss|\.sass)$/i.test(fileName);
@@ -25,7 +24,7 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   // add the directory of the source file to includePaths
   renderOpts.includePaths.push(path.dirname(fileName));
 
-  renderOpts.includePaths = renderOpts.includePaths.map(includePath => {
+  renderOpts.includePaths = renderOpts.includePaths.map((includePath) => {
     if (path.isAbsolute(includePath)) {
       return includePath;
     }
@@ -37,26 +36,28 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
 
   if (injectGlobalPaths.length > 0) {
     // automatically inject each of these paths into the source text
-    const injectText = injectGlobalPaths.map((injectGlobalPath) => {
-      const includesNamespace = Array.isArray(injectGlobalPath);
-      let importPath = includesNamespace ? injectGlobalPath[0] as string : injectGlobalPath as string;
+    const injectText = injectGlobalPaths
+      .map((injectGlobalPath) => {
+        const includesNamespace = Array.isArray(injectGlobalPath);
+        let importPath = includesNamespace ? (injectGlobalPath[0] as string) : (injectGlobalPath as string);
 
-      if (!path.isAbsolute(importPath)) {
-        // convert any relative paths to absolute paths relative to the project root
+        if (!path.isAbsolute(importPath)) {
+          // convert any relative paths to absolute paths relative to the project root
 
-        if (context.sys && typeof context.sys.normalizePath === 'function') {
-          // context.sys.normalizePath added in stencil 1.11.0
-          importPath = context.sys.normalizePath(path.join(context.config.rootDir, importPath));
-        } else {
-          // TODO, eventually remove normalizePath() from @stencil/sass
-          importPath = normalizePath(path.join(context.config.rootDir, importPath));
+          if (context.sys && typeof context.sys.normalizePath === 'function') {
+            // context.sys.normalizePath added in stencil 1.11.0
+            importPath = context.sys.normalizePath(path.join(context.config.rootDir, importPath));
+          } else {
+            // TODO, eventually remove normalizePath() from @stencil/sass
+            importPath = normalizePath(path.join(context.config.rootDir, importPath));
+          }
         }
-      }
 
-      const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
+        const importTerminator = renderOpts.indentedSyntax ? '\n' : ';';
 
-      return `@use "${importPath}"${includesNamespace ? ` as ${injectGlobalPath[1]}` : ''}${importTerminator}`;
-    }).join('');
+        return `@use "${importPath}"${includesNamespace ? ` as ${injectGlobalPath[1]}` : ''}${importTerminator}`;
+      })
+      .join('');
 
     renderOpts.data = injectText + renderOpts.data;
   }
@@ -68,7 +69,7 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   delete renderOpts.file;
 
   if (context.sys && typeof context.sys.resolveModuleId === 'function') {
-    const importers: Importer[] = []
+    const importers: Importer[] = [];
     if (typeof renderOpts.importer === 'function') {
       importers.push(renderOpts.importer);
     } else if (Array.isArray(renderOpts.importer)) {
@@ -82,22 +83,24 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
             const m = getModuleId(url);
 
             if (m.moduleId) {
-              context.sys.resolveModuleId({
-                moduleId: m.moduleId,
-                containingFile: m.filePath
-              }).then((resolved) => {
-                if (resolved.pkgDirPath) {
-                  const resolvedPath = path.join(resolved.pkgDirPath, m.filePath);
-                  done({
-                    file: context.sys.normalizePath(resolvedPath)
-                  });
-                } else {
-                  done(null);
-                }
-
-              }).catch(err => {
-                done(err);
-              });
+              context.sys
+                .resolveModuleId({
+                  moduleId: m.moduleId,
+                  containingFile: m.filePath,
+                })
+                .then((resolved) => {
+                  if (resolved.pkgDirPath) {
+                    const resolvedPath = path.join(resolved.pkgDirPath, m.filePath);
+                    done({
+                      file: context.sys.normalizePath(resolvedPath),
+                    });
+                  } else {
+                    done(null);
+                  }
+                })
+                .catch((err) => {
+                  done(err);
+                });
 
               return;
             }
@@ -115,7 +118,6 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
 
   return renderOpts;
 }
-
 
 export function createResultsId(fileName: string) {
   // create what the new path is post transform (.css)
@@ -147,7 +149,6 @@ export function normalizePath(str: string) {
       if (colonIndex < str.length - 2) {
         str = str.substring(0, str.length - 1);
       }
-
     } else if (str.length > 1) {
       str = str.substring(0, str.length - 1);
     }
@@ -175,7 +176,7 @@ export function getModuleId(orgImport: string) {
   }
 
   return m;
-};
+}
 
 const EXTENDED_PATH_REGEX = /^\\\\\?\\/;
 const NON_ASCII_REGEX = /[^\x00-\x80]+/;
