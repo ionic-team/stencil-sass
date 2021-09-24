@@ -10,12 +10,15 @@
   ],
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "build": "tsc && npm run rollup && npm run test",
+    "lint.prettier": "prettier --write 'src/**/*.ts'",
+    "build": "npm run prebuild && tsc && npm run rollup",
     "watch": "tsc --watch",
     "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
-    "release": "np --no-2fa",
+    "release": "np",
     "test": "jest",
+    "test.ci": "npm run test && npm run test.prettier",
+    "test.prettier": "prettier --check 'src/**/*.ts'",
     "test.watch": "jest --watch"
   },
   "peerDependencies": {
@@ -31,6 +34,7 @@
     "np": "^7.0.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.33.1",
+    "prettier": "^2.2.1",
     "sass": "^1.29.0",
     "terser": "^5.3.8",
     "ts-jest": "^26.4.4",
