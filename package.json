@@ -22,7 +22,7 @@
     "test.watch": "jest --watch"
   },
   "peerDependencies": {
-    "@stencil/core": ">=2.0.0"
+    "@stencil/core": ">=1.0.2"
   },
   "devDependencies": {
     "@ionic/prettier-config": "^2.0.0",
