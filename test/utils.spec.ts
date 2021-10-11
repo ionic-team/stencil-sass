@@ -25,43 +25,15 @@ describe('getRenderOptions', () => {
     expect(output.file).toBeUndefined();
   });
 
-  it('should inject global sass array, not change input options or include globals in output opts', () => {
+  it('should inject global sass array and not change input options or include globals in output opts', () => {
     const input: d.PluginOptions = {
       injectGlobalPaths: ['/my/global/variables.scss']
     };
     const output = util.getRenderOptions(input, sourceText, fileName, context);
-    expect(output.data).toBe(`@use "/my/global/variables.scss";body { color: blue; }`);
+    expect(output.data).toBe(`@import "/my/global/variables.scss";body { color: blue; }`);
     expect(output.injectGlobalPaths).toBeUndefined();
     expect(input.injectGlobalPaths).toHaveLength(1);
     expect(input.injectGlobalPaths[0]).toBe('/my/global/variables.scss');
-  });
-
-  it('should inject global sass array, not change input options or include globals in output opts, and add namespace', () => {
-    const input: d.PluginOptions = {
-      injectGlobalPaths: [['/my/global/variables.scss', 'var']]
-    };
-    const output = util.getRenderOptions(input, sourceText, fileName, context);
-    expect(output.data).toBe(`@use "/my/global/variables.scss" as var;body { color: blue; }`);
-    expect(output.injectGlobalPaths).toBeUndefined();
-    expect(input.injectGlobalPaths).toHaveLength(1);
-    expect(input.injectGlobalPaths[0][0]).toBe('/my/global/variables.scss');
-    expect(input.injectGlobalPaths[0][1]).toBe('var');
-  });
-
-  it('should inject global sass array, not change input options or include globals in output opts, and discern when to add namespace', () => {
-    const input: d.PluginOptions = {
-      injectGlobalPaths: [
-        ['/my/global/variables.scss', 'var'],
-        '/my/global/mixins.scss'
-      ]
-    };
-    const output = util.getRenderOptions(input, sourceText, fileName, context);
-    expect(output.data).toBe(`@use "/my/global/variables.scss" as var;@use "/my/global/mixins.scss";body { color: blue; }`);
-    expect(output.injectGlobalPaths).toBeUndefined();
-    expect(input.injectGlobalPaths).toHaveLength(2);
-    expect(input.injectGlobalPaths[0][0]).toBe('/my/global/variables.scss');
-    expect(input.injectGlobalPaths[0][1]).toBe('var');
-    expect(input.injectGlobalPaths[1]).toBe('/my/global/mixins.scss');
   });
 
   it('should add dirname of filename to existing includePaths array and not change input options', () => {
