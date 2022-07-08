@@ -10,15 +10,15 @@
   ],
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "lint.prettier": "prettier --write 'src/**/*.ts'",
+    "prettier": "prettier --write 'src/**/*.ts'",
+    "prettier.dry-run": "prettier --check 'src/**/*.ts'",
     "build": "npm run prebuild && tsc && npm run rollup",
     "watch": "tsc --watch",
     "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
     "release": "np",
     "test": "jest",
-    "test.ci": "npm run test && npm run test.prettier",
-    "test.prettier": "prettier --check 'src/**/*.ts'",
+    "test.ci": "npm run test && npm run prettier.dry-run",
     "test.watch": "jest --watch"
   },
   "peerDependencies": {
