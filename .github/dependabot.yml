@@ -13,4 +13,4 @@ updates:
     rebase-strategy: "disabled"
     ignore:
       - dependency-name: "@types/node"
-        versions: ["18"]
+        versions: ["17", "18"]
