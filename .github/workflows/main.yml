@@ -12,16 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Use Node from Volta
+      uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b # v3.5.0
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version-file: 'package.json'
+        cache: 'npm'
+    - uses: actions/checkout@v1
     - name: npm install, build, and test
       run: |
         npm install
