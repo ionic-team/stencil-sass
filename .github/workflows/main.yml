@@ -10,13 +10,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [12.x]
-        stencil-version: [2.4.0, latest]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v1
