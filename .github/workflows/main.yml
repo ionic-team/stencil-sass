@@ -22,10 +22,12 @@ jobs:
       with:
         node-version-file: 'package.json'
         cache: 'npm'
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build -- --ci
-        npm run test.ci
-      env:
-        CI: true
+    - name: Install Dependencies
+      run: npm ci
+      shell: bash
+    - name: Build
+      run: npm run build -- --ci
+      shell: bash
+    - name: Test
+      run: npm run test.ci
+      shell: bash
