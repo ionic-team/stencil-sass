@@ -1,30 +1,36 @@
-name: Node CI
+name: CI
 
 on:
+  push:
+    branches:
+      - 'main'
   pull_request:
     branches:
       - '**'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x]
-        stencil-version: [2.4.0, latest]
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Checkout Code
+      uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build -- --ci
-        npm run test.ci
-      env:
-        CI: true
+        persist-credentials: false
+    - name: Use Node from Volta
+      uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b # v3.5.0
+      with:
+        node-version-file: 'package.json'
+        cache: 'npm'
+    - name: Install Dependencies
+      run: npm ci
+      shell: bash
+    - name: Prettier Check
+      run: npm run prettier.dry-run
+      shell: bash
+    - name: Build
+      run: npm run build -- --ci
+      shell: bash
+    - name: Test
+      run: npm run test.ci
+      shell: bash
