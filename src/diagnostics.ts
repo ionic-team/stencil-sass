@@ -1,4 +1,4 @@
-import { SassException } from 'sass';
+import { LegacyException as SassException } from 'sass';
 import * as d from './declarations';
 
 export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, filePath: string) {

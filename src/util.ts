@@ -1,6 +1,8 @@
 import * as d from './declarations';
 import * as path from 'path';
-import { Importer } from 'sass';
+import { LegacyImporter } from 'sass';
+import { LegacyImporterResult } from 'sass/types/legacy/importer';
+import { LegacyOptions } from 'sass/types/legacy/options';
 
 export function usePlugin(fileName: string) {
   if (typeof fileName === 'string') {
@@ -9,7 +11,12 @@ export function usePlugin(fileName: string) {
   return true;
 }
 
-export function getRenderOptions(opts: d.PluginOptions, sourceText: string, fileName: string, context: d.PluginCtx) {
+export function getRenderOptions(
+  opts: d.PluginOptions,
+  sourceText: string,
+  fileName: string,
+  context: d.PluginCtx
+): LegacyOptions<'async'> {
   // create a copy of the original sass config so we don't change it
   const renderOpts = Object.assign({}, opts);
 
@@ -66,14 +73,14 @@ export function getRenderOptions(opts: d.PluginOptions, sourceText: string, file
   delete renderOpts.file;
 
   if (context.sys && typeof context.sys.resolveModuleId === 'function') {
-    const importers: Importer[] = [];
+    const importers: LegacyImporter[] = [];
     if (typeof renderOpts.importer === 'function') {
       importers.push(renderOpts.importer);
     } else if (Array.isArray(renderOpts.importer)) {
       importers.push(...renderOpts.importer);
     }
 
-    const importer: Importer = (url, _prev, done) => {
+    const importer: LegacyImporter = (url: string, _prev: string, done: (result: LegacyImporterResult) => void) => {
       if (typeof url === 'string') {
         if (url.startsWith('~')) {
           try {
