@@ -10,8 +10,9 @@
   ],
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "prettier": "prettier --write 'src/**/*.ts'",
-    "prettier.dry-run": "prettier --check 'src/**/*.ts'",
+    "prettier": "npm run prettier.base -- --write",
+    "prettier.base": "prettier --cache 'src/**/*.ts'",
+    "prettier.dry-run": "npm run prettier.base -- --list-different",
     "build": "npm run prebuild && tsc && npm run rollup",
     "watch": "tsc --watch",
     "rollup": "rollup -c rollup.config.js",
