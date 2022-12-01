@@ -15,7 +15,7 @@
     "prettier.dry-run": "npm run prettier.base -- --list-different",
     "build": "npm run prebuild && tsc && npm run rollup",
     "watch": "tsc --watch",
-    "rollup": "rollup -c rollup.config.js",
+    "rollup": "rollup -c rollup.config.mjs",
     "version": "npm run build",
     "release": "np",
     "test": "jest",
