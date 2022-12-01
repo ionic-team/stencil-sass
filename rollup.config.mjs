@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module';
-import pluginSass from './rollup.plugin.sass.js';
+import pluginSass from './rollup.plugin.sass.mjs';
 import rollupResolve from '@rollup/plugin-node-resolve';
 
 const require = createRequire(import.meta.url);
