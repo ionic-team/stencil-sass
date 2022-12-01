@@ -1,5 +1,5 @@
 import pkg from './package.json';
-import pluginSass from './rollup.plugin.sass';
+import pluginSass from './rollup.plugin.sass.js';
 import rollupResolve from '@rollup/plugin-node-resolve';
 
 
