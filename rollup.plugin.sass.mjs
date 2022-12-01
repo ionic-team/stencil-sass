@@ -1,8 +1,10 @@
+import { fileURLToPath } from 'node:url'
 import * as path from 'path';
 import { minify } from 'terser';
 
 export default function() {
-  const sassFilePath = path.join(__dirname, 'node_modules', 'sass', 'sass.dart.js');
+  const sassExecutable = path.join('node_modules', 'sass', 'sass.dart.js')
+  const sassFilePath = fileURLToPath(new URL('node_modules/sass/sass.dart.js', import.meta.url));
   return {
     resolveId(id) {
       if (id === 'sass') {
