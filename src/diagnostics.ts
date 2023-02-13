@@ -155,10 +155,10 @@ function formatFileName(rootDir: string, fileName: string): string {
 
   fileName = fileName.replace(rootDir, '');
   if (/\/|\\/.test(fileName.charAt(0))) {
-    fileName = fileName.substr(1);
+    fileName = fileName.substring(1);
   }
   if (fileName.length > 80) {
-    fileName = '...' + fileName.substr(fileName.length - 80);
+    fileName = '...' + fileName.substring(fileName.length - 80);
   }
   return fileName;
 }
