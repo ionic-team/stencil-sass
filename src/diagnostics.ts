@@ -1,7 +1,18 @@
 import { SassException } from 'sass';
 import * as d from './declarations';
 
-export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, filePath: string) {
+/**
+ * Generates a diagnostic as a result of an error originating from Sass.
+ *
+ * This function mutates the provided context by pushing the generated diagnostic to the context's collection of
+ * diagnostics.
+ *
+ * @param context the compilation context that the plugin has access to
+ * @param sassError the Sass error to create a diagnostic from
+ * @param filePath the path of the file that led to an error being raised
+ * @returns the created diagnostic, or `null` if one could not be generated
+ */
+export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, filePath: string): d.Diagnostic | null {
   if (sassError == null || context == null) {
     return null;
   }
@@ -35,7 +46,7 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
 
     if (errorLineIndex > -1) {
       try {
-        const sourceText = context.fs.readFileSync(diagnostic.absFilePath) as string;
+        const sourceText = context.fs.readFileSync(diagnostic.absFilePath);
         const srcLines = sourceText.split(/\r?\n/);
 
         const errorLine: d.PrintLine = {
@@ -101,7 +112,12 @@ export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, f
   return diagnostic;
 }
 
-function formatCode(input: number) {
+/**
+ * Helper function for converting a number error code to a string
+ * @param input the numeric error code to convert
+ * @returns the stringified error code
+ */
+function formatCode(input: number): string {
   let output = '';
   if (input != null) {
     output = String(input);
@@ -109,7 +125,13 @@ function formatCode(input: number) {
   return output;
 }
 
-function formatMessage(input: string) {
+/**
+ * Splits up a message from Sass, returning all input prior to the first '╷' character.
+ * If no such character exists, the entire original message will be returned.
+ * @param input the Sass message to split
+ * @returns the split message
+ */
+function formatMessage(input: string): string {
   let output = '';
   if (typeof input === 'string') {
     output = input.split('╷')[0];
@@ -117,7 +139,14 @@ function formatMessage(input: string) {
   return output;
 }
 
-function formatFileName(rootDir: string, fileName: string) {
+/**
+ * Formats the provided filename, by stripping the provided root directory out of the filename, and limiting the
+ * display string to 80 characters
+ * @param rootDir the root directory to strip out of the provided filename
+ * @param fileName the filename to format for pretty printing
+ * @returns the formatted filename
+ */
+function formatFileName(rootDir: string, fileName: string): string {
   if (!rootDir || !fileName) return '';
 
   fileName = fileName.replace(rootDir, '');
