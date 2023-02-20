@@ -1,4 +1,4 @@
-import { SassException } from 'sass';
+import { LegacyException } from 'sass';
 import * as d from './declarations';
 
 /**
@@ -12,7 +12,11 @@ import * as d from './declarations';
  * @param filePath the path of the file that led to an error being raised
  * @returns the created diagnostic, or `null` if one could not be generated
  */
-export function loadDiagnostic(context: d.PluginCtx, sassError: SassException, filePath: string): d.Diagnostic | null {
+export function loadDiagnostic(
+  context: d.PluginCtx,
+  sassError: LegacyException,
+  filePath: string
+): d.Diagnostic | null {
   if (sassError == null || context == null) {
     return null;
   }

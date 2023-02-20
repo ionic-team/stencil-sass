@@ -1,17 +1,29 @@
 import { fileURLToPath } from 'node:url'
 import { minify } from 'terser';
 
+/**
+ * A rollup plugin for bundling Sass directly into the project
+ */
 export default function() {
   const sassFilePath = fileURLToPath(new URL('node_modules/sass/sass.dart.js', import.meta.url));
   return {
+    /**
+     * A rollup build hook for resolving the Sass implementation module.
+     * @param {string} id the importee exactly as it is written in an import statement in the source code
+     * @returns {string | undefined} the path to the Sass implementation from the root of this project
+     */
     resolveId(id) {
       if (id === 'sass') {
         return sassFilePath;
       }
     },
+    /**
+     * Wraps Sass to bundle it into the project
+     * @param {string} code the code to modify
+     * @param {string} id module's identifier
+     * @returns {string} the modified code
+     */
     async transform(code, id) {
-      // a little nudge to make it easier for
-      // rollup to find the cjs exports
       if (id === sassFilePath) {
         return await wrapSassImport(code);
       }
@@ -22,6 +34,15 @@ export default function() {
 };
 
 
+/**
+ * Wraps Sass in an IIFE to make it easier for rollup to find CJS exports and minifies it.
+ *
+ * This function generates code for calling Sass' entrypoint function (`load()`) and capturing a reference to its
+ * `render` function.
+ *
+ * @param {string} code the Sass implementation code
+ * @returns {Promise<string>} the wrapped Sass code
+ */
 async function wrapSassImport(code) {
   code = `
 
@@ -57,6 +78,7 @@ ${code};
 
 })(Sass);
 
+Sass.load({});
 const render = Sass.render;
 export { render };
 `;
@@ -72,8 +94,9 @@ export { render };
     'false /** NODE ENVIRONMENT **/'
   );
 
-  code = removeNodeRequire(code, 'chokidar');
-  code = removeNodeRequire(code, 'readline');
+  code = removeCliPkgRequire(code, 'chokidar');
+  code = removeCliPkgRequire(code, 'readline');
+  code = removeNodeRequire(code, 'immutable');
 
   const minified = await minify(code, { module: true });
   code = minified.code;
@@ -81,16 +104,43 @@ export { render };
   return code
 }
 
-function removeNodeRequire(code, moduleId) {
-  const requireStr = `require("${moduleId}")`;
+/**
+ * Node modules are required by node_modules/sass/sass.dart.js via `_cli_pkg_requires`.
+ *
+ * This function manually removes unneeded require statements from the source.
+ *
+ * @param {string} code the code to modify
+ * @param {string} moduleId the module identifier found in a require-like statement
+ * @returns {string} the modified code
+ */
+function removeCliPkgRequire(code, moduleId) {
+  // e.g. `self.chokidar = _cli_pkg_requires.chokidar;`
+  const requireStr = `self.${moduleId} = _cli_pkg_requires.${moduleId};`;
   if (!code.includes(requireStr)) {
-    // node modules are required by sass.dart
-    // however this build doesn't use or need them
-    // so we'll manually remove it from the source
     throw new Error(`cannot find "${requireStr}" in sass.dart`);
   }
   return code.replace(
     requireStr,
     '{}'
+  );
+}
+
+/**
+ * Node modules are required by node_modules/sass/sass.dart.js via `require`.
+ *
+ * This function manually removes unneeded require statements from the source.
+ *
+ * @param {string} code the code to modify
+ * @param {string} moduleId the module identifier found in a require-like statement
+ * @returns {string} the modified code
+ */
+function removeNodeRequire(code, moduleId) {
+  const requireStr = `require("${moduleId}")`;
+  if (!code.includes(requireStr)) {
+    throw new Error(`cannot find "${requireStr}" in sass.dart`);
+  }
+  return code.replace(
+      requireStr,
+      '{}'
   );
 }

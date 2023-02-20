@@ -1,4 +1,4 @@
-import { render } from 'sass';
+import { type LegacyException, type LegacyResult, render } from 'sass';
 import * as d from './declarations';
 import { loadDiagnostic } from './diagnostics';
 import { createResultsId, getRenderOptions, usePlugin } from './util';
@@ -46,7 +46,7 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
       return new Promise<d.PluginTransformResults>((resolve) => {
         try {
           // invoke sass' compiler at this point
-          render(renderOpts, (err, sassResult) => {
+          render(renderOpts, (err: LegacyException, sassResult: LegacyResult): void => {
             if (err) {
               loadDiagnostic(context, err, fileName);
               results.code = `/**  sass error${err && err.message ? ': ' + err.message : ''}  **/`;
