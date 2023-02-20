@@ -1,6 +1,7 @@
 import * as d from './declarations';
 import * as path from 'path';
-import { Importer, ImporterReturnType } from 'sass';
+import { LegacyAsyncImporter, LegacyImporterResult } from 'sass';
+import { LegacyOptions } from 'sass/types/legacy/options';
 
 /**
  * Determine if the Sass plugin should be applied, based on the provided `fileName`
@@ -29,12 +30,10 @@ export function getRenderOptions(
   sourceText: string,
   fileName: string,
   context: d.PluginCtx
-): d.PluginOptions {
-  // create a copy of the original sass config, so we don't modify the one provided
-  const renderOpts = Object.assign({}, opts);
-
-  // always set "data" from the source text
-  renderOpts.data = sourceText;
+): LegacyOptions<'async'> {
+  // Create a copy of the original sass config, so we don't modify the one provided.
+  // Explicitly add `data` (as it's a required field) to be the source text
+  const renderOpts: LegacyOptions<'async'> = { ...opts, data: sourceText };
 
   // activate indented syntax if the file extension is .sass.
   // this needs to be set prior to injecting global sass (as the syntax affects the import terminator)
@@ -83,13 +82,13 @@ export function getRenderOptions(
   }
 
   // remove non-standard sass option
-  delete renderOpts.injectGlobalPaths;
+  delete (renderOpts as any).injectGlobalPaths;
 
   // the "file" config option is not valid here
   delete renderOpts.file;
 
   if (context.sys && typeof context.sys.resolveModuleId === 'function') {
-    const importers: Importer[] = [];
+    const importers: LegacyAsyncImporter[] = [];
     if (typeof renderOpts.importer === 'function') {
       importers.push(renderOpts.importer);
     } else if (Array.isArray(renderOpts.importer)) {
@@ -103,7 +102,11 @@ export function getRenderOptions(
      * @param _prev Unused - typically, this is a string identifying the stylesheet that contained the @use or @import.
      * @param done a callback to return the path to the resolved path
      */
-    const importer: Importer = (url: string, _prev: string, done: (data: ImporterReturnType) => void): void => {
+    const importer: LegacyAsyncImporter = (
+      url: string,
+      _prev: string,
+      done: (data: LegacyImporterResult) => void
+    ): void => {
       if (typeof url === 'string') {
         if (url.startsWith('~')) {
           try {
