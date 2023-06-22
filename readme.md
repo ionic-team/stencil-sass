@@ -55,7 +55,7 @@ Note that each of these files are always added to each component, so in most cas
 
 * [sass](https://www.npmjs.com/package/sass)
 * [Stencil](https://stenciljs.com/)
-* [Stencil Worldwide Slack](https://stencil-worldwide.slack.com)
+* [Ionic Discord](https://chat.stenciljs.com/)
 * [Ionic Components](https://www.npmjs.com/package/@ionic/core)
 * [Ionicons](http://ionicons.com/)
 
