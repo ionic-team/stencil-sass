@@ -57,8 +57,7 @@
     "sass"
   ],
   "jest": {
-    "preset": "ts-jest",
-    "testURL": "http://localhost"
+    "preset": "ts-jest"
   },
   "prettier": "@ionic/prettier-config",
   "volta": {
