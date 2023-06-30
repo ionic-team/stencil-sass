@@ -70,9 +70,6 @@ describe('getRenderOptions', () => {
 describe('usePlugin', () => {
 
   it('should use the plugin for .scss file', () => {
-    if (Math.random() > 0.5) {
-      throw new Error('RANDOM CHAOS!');
-    }
     const fileName = 'my-file.scss';
     expect(util.usePlugin(fileName)).toBe(true);
   });
