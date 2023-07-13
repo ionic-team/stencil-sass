@@ -68,27 +68,20 @@ describe('getRenderOptions', () => {
 
 
 describe('usePlugin', () => {
-
-  it('should use the plugin for .scss file', () => {
-    const fileName = 'my-file.scss';
+  it.each(['.sass', '.scss', '.SASS', '.SCSS'])('returns true for a %s file', (extension) => {
+    const fileName = `my-file${extension}`;
     expect(util.usePlugin(fileName)).toBe(true);
   });
 
-  it('should use the plugin for .sass file', () => {
-    const fileName = 'my-file.sass';
-    expect(util.usePlugin(fileName)).toBe(true);
-  });
-
-  it('should not use the plugin for .pcss file', () => {
-    const fileName = 'my-file.pcss';
+  it.each(['.pcss', '.css', '.ts', '.tsx', '.js', '.jsx', '.mjs'])('returns false for a %s file', (extension) => {
+    const fileName = `my-file${extension}`;
     expect(util.usePlugin(fileName)).toBe(false);
   });
 
-  it('should not use the plugin for .css file', () => {
-    const fileName = 'my-file.css';
-    expect(util.usePlugin(fileName)).toBe(false);
+  it.each([undefined, null])('returns false for non-string file (%s)', (fileName) => {
+    // the intent of this test is to intentionally provide a non-string value, hence the assertion
+    expect(util.usePlugin(fileName as unknown as string)).toBe(false);
   });
-
 });
 
 describe('createResultsId', () => {

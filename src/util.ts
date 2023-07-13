@@ -10,11 +10,11 @@ import { LegacyOptions } from 'sass/types/legacy/options';
  * @returns `true` if the name of the file ends with a sass extension (.scss, .sass), case insensitive. `false`
  * otherwise
  */
-export function usePlugin(fileName: string) {
+export function usePlugin(fileName: string): boolean {
   if (typeof fileName === 'string') {
     return /(\.scss|\.sass)$/i.test(fileName);
   }
-  return true;
+  return false;
 }
 
 /**
