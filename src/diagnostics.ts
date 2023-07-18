@@ -15,7 +15,7 @@ import * as d from './declarations';
 export function loadDiagnostic(
   context: d.PluginCtx,
   sassError: LegacyException,
-  filePath: string
+  filePath: string,
 ): d.Diagnostic | null {
   if (sassError == null || context == null) {
     return null;

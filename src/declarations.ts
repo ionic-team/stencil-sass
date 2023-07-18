@@ -99,5 +99,5 @@ export type ImporterReturnType = { file: string } | { contents: string } | Error
 export type Importer = (
   url: string,
   prev: string,
-  done: (data: ImporterReturnType) => void
+  done: (data: ImporterReturnType) => void,
 ) => ImporterReturnType | void;
