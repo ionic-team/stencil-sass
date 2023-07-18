@@ -29,7 +29,7 @@ export function getRenderOptions(
   opts: d.PluginOptions,
   sourceText: string,
   fileName: string,
-  context: d.PluginCtx
+  context: d.PluginCtx,
 ): LegacyOptions<'async'> {
   // Create a copy of the original sass config, so we don't modify the one provided.
   // Explicitly add `data` (as it's a required field) to be the source text
@@ -105,7 +105,7 @@ export function getRenderOptions(
     const importer: LegacyAsyncImporter = (
       url: string,
       _prev: string,
-      done: (data: LegacyImporterResult) => void
+      done: (data: LegacyImporterResult) => void,
     ): void => {
       if (typeof url === 'string') {
         if (url.startsWith('~')) {
