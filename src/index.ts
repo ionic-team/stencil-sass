@@ -52,7 +52,9 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
               results.code = `/**  sass error${err && err.message ? ': ' + err.message : ''}  **/`;
               resolve(results);
             } else {
-              results.dependencies = Array.from(sassResult.stats.includedFiles);
+              results.dependencies = Array.from(sassResult.stats.includedFiles as string[]).map((dep) =>
+                context.sys.normalizePath(dep),
+              );
               results.code = sassResult.css.toString();
 
               // write this css content to memory only so it can be referenced
