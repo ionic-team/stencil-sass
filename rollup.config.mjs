@@ -3,8 +3,6 @@ import pluginSass from './rollup.plugin.sass.mjs';
 import typescript from '@rollup/plugin-typescript';
 import rollupResolve from '@rollup/plugin-node-resolve';
 
-// require `package.json` in order to use its 'main' and 'module' fields to tell rollup where to output the generated
-// bundles
 const pkg = JSON.parse((await fs.readFile('./package.json')));
 
 /**
