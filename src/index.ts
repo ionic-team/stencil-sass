@@ -1,4 +1,5 @@
 import { type LegacyException, type LegacyResult, render } from 'sass';
+
 import * as d from './declarations';
 import { loadDiagnostic } from './diagnostics';
 import { createResultsId, getRenderOptions, usePlugin } from './util';

@@ -17,8 +17,8 @@
     "prettier": "npm run prettier.base -- --write",
     "prettier.base": "prettier --cache 'src/**/*.ts'",
     "prettier.dry-run": "npm run prettier.base -- --list-different",
-    "build": "npm run prebuild && tsc && npm run rollup",
-    "watch": "tsc --watch",
+    "build": "npm run prebuild && npm run rollup",
+    "watch": "npm run rollup -- --watch",
     "rollup": "rollup -c rollup.config.mjs",
     "version": "npm run build",
     "release": "np",
@@ -32,6 +32,7 @@
   "devDependencies": {
     "@ionic/prettier-config": "^4.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@stencil/core": "^4.0.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^20.2.0",

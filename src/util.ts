@@ -1,7 +1,8 @@
+import path from 'node:path';
+import type { LegacyAsyncImporter, LegacyImporterResult } from 'sass';
+import type { LegacyOptions } from 'sass/types/legacy/options';
+
 import * as d from './declarations';
-import * as path from 'path';
-import { LegacyAsyncImporter, LegacyImporterResult } from 'sass';
-import { LegacyOptions } from 'sass/types/legacy/options';
 
 /**
  * Determine if the Sass plugin should be applied, based on the provided `fileName`
