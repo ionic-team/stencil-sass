@@ -57,7 +57,7 @@ export function sass(opts: d.PluginOptions = {}): WithRequired<d.Plugin, 'transf
               results.code = `/**  sass error${err && err.message ? ': ' + err.message : ''}  **/`;
               resolve(results);
             } else {
-              results.dependencies = Array.from(sassResult.stats.includedFiles as string[]).map((dep) =>
+              results.dependencies = Array.from(sassResult.stats.includedFiles).map((dep) =>
                 context.sys.normalizePath(dep),
               );
               results.code = sassResult.css.toString();
