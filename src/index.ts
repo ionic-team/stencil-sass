@@ -6,7 +6,7 @@ import { createResultsId, getRenderOptions, usePlugin } from './util';
 /**
  * Helper type to note which plugin methods are defined for this plugin.
  */
-type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
 /**
  * The entrypoint of the Stencil Sass plugin
