@@ -4,6 +4,11 @@ import { loadDiagnostic } from './diagnostics';
 import { createResultsId, getRenderOptions, usePlugin } from './util';
 
 /**
+ * Helper type to note which plugin methods are defined for this plugin.
+ */
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
+/**
  * The entrypoint of the Stencil Sass plugin
  *
  * This function creates & configures the plugin to be used by consuming Stencil projects
@@ -13,7 +18,7 @@ import { createResultsId, getRenderOptions, usePlugin } from './util';
  * @param opts options to configure the plugin
  * @return the configured plugin
  */
-export function sass(opts: d.PluginOptions = {}): d.Plugin {
+export function sass(opts: d.PluginOptions = {}): WithRequired<d.Plugin, 'transform'> {
   return {
     name: 'sass',
     pluginType: 'css',
@@ -52,7 +57,9 @@ export function sass(opts: d.PluginOptions = {}): d.Plugin {
               results.code = `/**  sass error${err && err.message ? ': ' + err.message : ''}  **/`;
               resolve(results);
             } else {
-              results.dependencies = Array.from(sassResult.stats.includedFiles);
+              results.dependencies = Array.from(sassResult.stats.includedFiles).map((dep) =>
+                context.sys.normalizePath(dep),
+              );
               results.code = sassResult.css.toString();
 
               // write this css content to memory only so it can be referenced

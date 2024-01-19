@@ -14,8 +14,10 @@ describe('test build', () => {
         rootDir: '/Users/my/app/',
         srcDir: '/Users/my/app/src/',
       },
-      cache: null,
-      sys: {} as any,
+      cache: null as any,
+      sys: {
+        normalizePath: jest.fn((p: string) => p),
+      } as any,
       fs: {
         readFileSync(filePath: string) {
           return fs.readFileSync(filePath, 'utf8');
@@ -50,6 +52,7 @@ describe('test build', () => {
       path.join(__dirname, 'fixtures', 'scss', 'variables.scss')
     ]);
     expect(results.diagnostics).toEqual(undefined);
+    expect(context.sys.normalizePath).toBeCalledTimes(1)
   });
 
   it('transform, error scss', async () => {
