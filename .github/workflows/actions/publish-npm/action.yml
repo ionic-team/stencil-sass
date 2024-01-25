@@ -55,6 +55,6 @@ runs:
       env:
         NPM_TOKEN: ${{ inputs.token }}
 
-#    - name: Publish to NPM
-#      run: npm publish --tag ${{ inputs.tag }} --provenance
-#      shell: bash
+    - name: Publish to NPM
+      run: npm publish --tag ${{ inputs.tag }} --provenance
+      shell: bash
