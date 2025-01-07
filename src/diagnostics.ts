@@ -1,4 +1,4 @@
-import { LegacyException } from 'sass';
+import type { LegacyException } from 'sass-embedded';
 import * as d from './declarations';
 
 /**

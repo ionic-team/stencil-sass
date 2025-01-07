@@ -1,6 +1,5 @@
 import path from 'node:path';
-import type { LegacyAsyncImporter, LegacyImporterResult } from 'sass';
-import type { LegacyOptions } from 'sass/types/legacy/options';
+import type { LegacyAsyncImporter, LegacyImporterResult, LegacyOptions } from 'sass-embedded';
 
 import * as d from './declarations';
 
@@ -146,6 +145,8 @@ export function getRenderOptions(
 
     renderOpts.importer = importers;
   }
+
+  renderOpts.silenceDeprecations = [...(renderOpts.silenceDeprecations ?? []), 'legacy-js-api'];
 
   return renderOpts;
 }
