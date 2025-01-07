@@ -1,4 +1,4 @@
-import { type LegacyException, type LegacyResult, render } from 'sass';
+import { type LegacyException, type LegacyResult, render } from 'sass-embedded';
 
 import * as d from './declarations';
 import { loadDiagnostic } from './diagnostics';

@@ -1,5 +1,4 @@
 import fs from 'node:fs/promises'
-import pluginSass from './rollup.plugin.sass.mjs';
 import typescript from '@rollup/plugin-typescript';
 import rollupResolve from '@rollup/plugin-node-resolve';
 
@@ -14,13 +13,13 @@ export default {
 
   plugins: [
     typescript(),
-    pluginSass(),
     rollupResolve({
       preferBuiltins: true
     }),
   ],
 
   external: [
+    "sass-embedded",
     'fs',
     'path'
   ],

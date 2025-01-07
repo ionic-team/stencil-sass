@@ -1,5 +1,5 @@
-@import 'variables';
+@use 'variables';
 
 body {
-  color: $color;
+  color: variables.$color;
 }
